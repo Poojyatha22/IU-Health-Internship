@@ -1,0 +1,418 @@
+---
+title: "DTS"
+output: html_document
+date: '2022-06-21'
+---
+
+#DTS document breakdown
+
+```{r setup}
+pacman::p_load(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)
+```
+
+# Concept
+
+## Concept properties
+
+```{r}
+d <- xml2::read_xml(here::here("inst/Core_MEDRT_XML/Core_MEDRT_20220502_DTS.xml"))
+d %>% head()
+```
+
+```{r}
+dconcept <-  xml_find_all(d, 'concept')  
+
+dconcept %>% head()
+```
+```{r}
+htmltidy::xml_view(dconcept[1])
+```
+
+
+```{r}
+d1 <- 
+    dconcept %>% 
+    as_list() %>% 
+    tibble (c= .)
+
+d1 %>% head()
+```
+
+
+```{r}
+d1[1]
+
+```
+
+```{r}
+
+
+d2 <- 
+  d1[1] %>%
+  unnest_wider(col=c)
+
+d1 %>% head()
+```
+
+```{r}
+
+d2 <- d1 %>% unnest_wider(col=everything)
+d2 %>% head()
+```
+
+
+```{r}
+ dc0<-
+  
+  dconcept %>%
+  as_list() %>%
+  tibble(c = .) %>% 
+  unnest_wider(col=c) %>% 
+  select(namespace:status, starts_with('property')) %>% 
+  pivot_longer(starts_with('property'), names_to = 'propertyname', values_to = 'property') 
+
+dc0
+
+```
+
+```{r}
+dc0 <- 
+  dc0 %>% unnest_wider(col=everything())
+
+dc0 %>% head()
+```
+
+
+
+
+
+
+
+```{r}
+ dc0<-
+  
+  dconcept %>%
+  as_list() %>%
+  tibble(c = .) %>% 
+  unnest_wider(col=c) %>% 
+  select(namespace:status, starts_with('property')) %>% 
+  pivot_longer(starts_with('property'), names_to = 'propertyname', values_to = 'property') 
+
+dc0
+```
+
+```{r}
+dc1<-
+  
+  dc0 %>% unnest_longer(col = property) %>% 
+  
+  select(-propertyname) %>% 
+  filter(!is.na(property_id)) %>% 
+  pivot_wider(names_from = property_id, values_from = property, names_prefix = 'property_')  %>% 
+   unnest_longer(col = everything()) %>% 
+  select(-ends_with('id')) %>% 
+  unnest(col = starts_with('property')  ) %>% 
+  unnest(col = starts_with('property'))
+
+dc1
+```
+
+
+
+
+
+
+
+
+
+```{r}
+
+dc2 <-  
+  dc1 %>% pivot_wider(names_from = property_name, values_from = property_value)
+
+dc2 %>% head()
+```
+```{r}
+dc2 %>% data.table::fwrite(here::here('data','dts_concept_properties.csv'))
+```
+
+```{r}
+dc2 <-  data.table::fread(here::here('data','dts_concept_properties.csv'))
+```
+
+```{r}
+dc1 %>% head()
+```
+
+
+## Concept synonym
+
+```{r}
+dc2<-  dconcept %>% as_list() %>% tibble(c = .) %>% unnest_wider(col=c)
+dc2 %>% head()
+```
+
+```{r}
+dc3<- 
+  
+  dc2 %>% 
+  select(namespace:status, starts_with('synonym')) %>% 
+  pivot_longer(starts_with('synonym'), names_to = 'synonymname', values_to = 'synonym') %>% 
+  unnest_longer(col = everything()) %>% 
+  unnest(col=synonym) %>% 
+  unnest(col=synonym) %>% 
+  rename(namespace_syn=namespace,name_syn=name) %>% 
+  pivot_wider(names_from = 'synonym_id',values_from = 'synonym') %>% 
+  select(-name, -synonymname, -namespace_syn) %>% 
+  filter(preferred == 'false') %>% 
+  head(20) %>% 
+  select(name_syn, to_name, everything())
+
+dc3
+
+```
+
+```{r}
+dc3<- 
+  
+  dc2 %>% 
+  select(namespace:status, starts_with('synonym')) %>% 
+  pivot_longer(starts_with('synonym'), names_to = 'synonymname', values_to = 'synonym') %>% 
+  unnest_longer(col = everything()) %>% 
+  unnest_longer(col  = synonym) %>% 
+  unnest_wider(col = synonymname)
+
+
+          
+dc3
+```
+
+```{r}
+dc33<- dc3 %>% 
+  janitor::clean_names() %>% 
+  select(-x1) %>% 
+  filter(!is.na(synonym)) %>% 
+  unique() %>% 
+  rename(cs_namespace=namespace,cs_name=name) %>% 
+  pivot_wider(names_from = 'synonym_id', values_from = 'synonym') %>% 
+  unnest_longer(all_of(c('namespace','name','to_namespace'))) %>% 
+  unnest_longer(to_name) %>% 
+  unnest_longer(to_code) %>% 
+  unnest_longer(preferred)
+      
+```
+
+```{r}
+dc33 %>% data.table::fwrite(here::here('data','dts_concept_synonyms.csv'))
+```
+
+```{r}
+dc33 <-  data.table::fread(here::here('data','dts_concept_synonyms.csv'))
+```
+
+# Association
+
+```{r}
+dassn <- xml_find_all(d, 'association')  
+dassn[1:2]
+```
+
+```{r}
+ daa0<-
+  
+  dassn %>% 
+  as_list() %>% 
+  tibble(c=.) %>% 
+  rowwise()
+```
+
+```{r}
+
+daa0 %>% head()
+```
+
+```{r}
+daa1<- 
+  
+  daa0 %>%  unnest_wider(col=c)
+
+daa1 %>% head()
+```
+
+```{r}
+daa2<- 
+    daa1 %>%  unnest_longer(col=everything())
+
+daa2 %>% head()
+```
+
+```{r}
+daa3<- 
+  
+  daa2 %>% unnest_longer(col=qualifier)
+                      
+daa3 %>% head()
+```
+
+```{r}
+daa4<- 
+  
+  daa3 %>% unnest_longer(everything())
+
+
+daa4 %>% head()
+```
+
+```{r}
+daa5<- 
+  
+  daa4 %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(ends_with('id'),names_to = 'qual_id_name',values_to = 'qual_id') %>% 
+  filter(!is.na(qual_id)) %>% 
+  pivot_longer(starts_with('qualifier'),names_to='qualifier_name',values_to='qualifier') %>% 
+  filter(!is.na(qualifier)) %>% 
+  select(-qual_id_name,-qualifier_name) %>% 
+  unique()  %>% 
+  rename(association_name=name) %>% 
+  pivot_wider(names_from='qual_id',values_from='qualifier') %>% 
+  unnest(col=content:value) %>% 
+   rename(qualifier_content=content,qualifier_name=name,qualifier_value=value)
+
+daa5 %>% head()
+```
+
+```{r}
+daa5 %>% data.table::fwrite(here::here('data','dts_association.csv'))
+```
+
+```{r}
+daa5 <- data.table::fread(here::here('data','dts_association.csv'))
+daa5 %>% head() 
+```
+
+```{r}
+daa5 <-  data.table::fread(here::here('data','dts_association.csv'))
+
+```
+
+```{r}
+dassn[1:2] %>% htmltidy::xml_view()
+```
+
+# Term
+
+```{r}
+dterm <- xml_find_all(d, 'term')  
+
+```
+
+```{r}
+dt <-  dterm %>% 
+  as_list() %>% 
+  tibble(c1 = .) %>% 
+  unnest_wider(col = c1) %>% 
+  janitor::clean_names()  %>% 
+  unnest_longer(col = everything())
+
+dt %>% head()
+```
+
+```{r}
+dterm[1:2] %>% htmltidy::xml_view()
+```
+
+```{r}
+dt %>% data.table::fwrite(here::here('data','dts_term.csv'))
+```
+
+```{r}
+dt <-  data.table::fread(here::here('data','dts_term.csv'))
+```
+
+#Qualtype
+
+```{r}
+dql <- xml_find_all(d, 'qualtype') 
+dql0 <- dql %>% 
+  as_list() %>% 
+  tibble(c1 = .) %>% 
+  unnest_wider(col = c1) %>% 
+  unnest_longer( col = everything())
+
+dql0 %>% head() 
+```
+
+```{r}
+dql[1] %>% htmltidy::xml_view()
+```
+
+```{r}
+dql0 %>% data.table::fwrite(here::here('data','dts_qualtype.csv'))
+```
+
+```{r}
+dql0 <- data.table::fread(here::here('data','dts_qualtype.csv'))
+```
+
+# Assntype
+
+```{r}
+dat <- xml_find_all(d, 'assntype') 
+
+dat %>% head()
+```
+
+```{r}
+dat0 <- dat %>% 
+  as_list() %>% 
+  tibble(c1 = .) %>% 
+  unnest_wider(col = c1) %>% 
+  unnest_longer( col = everything())
+
+dat0 %>%  head()
+   
+```
+
+```{r}
+dat[1:2] %>% htmltidy::xml_view()
+```
+
+```{r}
+dat0 %>% data.table::fwrite(here::here('data','dts_associationtype.csv'))
+```
+
+```{r, eval = FALSE}
+dat0 <-  data.table::fread(here::here('data','dts_associationtype.csv'))
+```
+
+## Namespace
+
+```{r}
+dns <- xml_find_all(d, 'namespace') 
+dns0 <- dns %>% 
+  as_list() %>% 
+  tibble(c1 = .) %>% 
+  
+  unnest_wider(col=c1) %>% 
+  unnest_longer(everything())
+
+
+dns0 %>% head()
+
+```
+
+```{r}
+dns[1] %>% htmltidy::xml_view()
+```
+
+```{r}
+
+dns0 %>% data.table::fwrite(here::here('data','dts_namespace.csv'))
+```
+
+```{r}
+dns0 <-  data.table::fread(here::here('data','dts_namespace.csv'))
+```
+
+#over

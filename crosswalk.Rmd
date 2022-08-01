@@ -1,0 +1,834 @@
+---
+title: "Untitled"
+output: html_document
+date: "2022-06-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+pacman::p_load(tidyverse,dbplyr, stringdist)
+```
+
+
+
+```{r, include=FALSE, eval=TRUE}
+coni <- DBI::dbConnect(odbc::odbc(),
+                 Driver = "SQL Server",
+                 Server = "icwwolfram01vg",
+                 Database = "Experiments")
+```
+
+```{r connection, cache=FALSE}
+# The connection to CERNER data.
+con <- odbc::dbConnect(odbc::odbc(), "EDW", uid = 'pvenkatesh@iuhealth.org')
+```
+
+```{r}
+dn <- tbl(con,in_schema('cerner_reference','multumndcmaindrugcodebase'))
+```
+ 
+```{r}
+head(dn)
+```
+```{r}
+mysql <- glue::glue_sql("select  *
+from cerner_reference.multumndcmaindrugcodebase mm
+join cerner_reference.MultumMMDCNameMapbase mn on mm.mainmultumdrugcd=mn.mainmultumdrugcd
+join cerner_reference.MultumNDCCoreDescription mc on mm.mainmultumdrugcd=mc.mainmultumdrugcd
+join cerner_reference.multumdrugidentification mi on mn.drugsynonymid=mi.drugsynonymid
+join cerner_orders.catalog c on mm.drugid=right(c.CernerKnowledgeIndexID,6)",.conn = con
+)
+
+
+```
+#code 
+```{r}
+DBI::dbGetQuery(con,mysql) |> 
+  head()
+```
+
+
+```{r}
+table1 <- 
+  DBI::dbGetQuery(con,mysql) %>% 
+  select(CatalogCVCD,CatalogCVDisplayDSC) %>%
+  distinct()
+```
+
+#twofields included in table1
+
+```{r}
+table1 |> head()
+```
+
+
+```{r}
+table1 |> 
+  select(CatalogCVDisplayDSC) |> 
+  distinct() |> 
+  head()
+```
+
+```{r}
+table1 %>%
+  select(CatalogCVCD,CatalogCVDisplayDSC) %>%
+  distinct() %>% 
+  head()
+```
+
+
+```{r}
+table1 %>% head()
+```
+
+#table1 
+
+```{r}
+table1 |> select(CatalogCVCD,CatalogCVDisplayDSC)
+```
+
+
+```{r}
+table5 <-  
+  table1 |> 
+  select(HalfLifeAMT) %>%
+  distinct() %>% 
+  head()
+```
+
+```{r}
+xml_from_name <- 
+  tbl(coni,in_schema('Reference','poojyatha_venkatesh_medrt_xml_assn') ) %>% 
+  select(from_name) %>%
+  distinct() %>% 
+  collect()
+
+```
+
+#xmlfromname
+
+```{r}
+xml_from_name |> head()
+```
+
+
+```{r}
+dts_from_name <- 
+  tbl(coni,in_schema('Reference','poojyatha_venkatesh_medrt_dts_association') ) %>% 
+  select(from_name) %>%
+  distinct() %>% 
+  collect() %>% 
+  mutate(from_name = stringr::str_remove(from_name, regex('\\[\\d*\\]'))) %>% 
+  distinct()
+```
+
+```{r}
+dts_from_name |> head()
+```
+
+
+```{r}
+dts_from_name %>% 
+  count()
+```
+
+
+```{r}
+dts_from_name |> 
+  mutate(from_name_no_punct = stringr::str_to_lower(from_name) |> 
+           stringr::str_remove_all('[[:punct:]]')) |>  head(10000) |> 
+  tidyr::crossing(table1) %>%  
+  mutate(CatalogCVDisplayDSC_no_punct = stringr::str_to_lower(CatalogCVDisplayDSC) |> 
+           stringr::str_remove_all('[[:punct:]]') |> 
+           stringr::str_remove_all("zz")) |> 
+  mutate(distance = stringdist(from_name_no_punct, CatalogCVDisplayDSC_no_punct)) |>
+  group_by(CatalogCVDisplayDSC) %>% 
+  arrange(distance) %>% 
+  slice(1:1) %>% 
+  ungroup() |> 
+  mutate(sim_score = distance/stringr::str_length(CatalogCVDisplayDSC_no_punct)) |> 
+  filter(distance <= 5 ) |> 
+  arrange(desc(sim_score)) |> 
+  head(1000)
+```
+
+```{r}
+dts_from_name |> 
+  mutate(from_name_no_punct = stringr::str_to_lower(from_name) |> 
+           stringr::str_remove_all('[[:punct:]]')) |>
+  tidyr::crossing(table1) %>%  
+  mutate(CatalogCVDisplayDSC_no_punct = stringr::str_to_lower(CatalogCVDisplayDSC) |> 
+           stringr::str_remove_all('[[:punct:]]') |> 
+           stringr::str_remove_all("zz")) |> 
+  mutate(distance = stringdist(from_name_no_punct, CatalogCVDisplayDSC_no_punct)) |>
+  group_by(CatalogCVDisplayDSC) %>% 
+  arrange(distance) %>% 
+  slice(1:1) %>% 
+  ungroup() |> 
+  mutate(sim_score = distance/stringr::str_length(CatalogCVDisplayDSC_no_punct)) |> 
+  filter(distance <= 6 ) |> 
+  arrange(desc(sim_score)) 
+  
+```
+## dcross
+
+```{r}
+dcross <- 
+dts_from_name |> 
+  mutate(from_name_no_punct = stringr::str_to_lower(from_name) |> 
+           stringr::str_remove_all('[[:punct:]]')) |>
+  tidyr::crossing(table1) %>%  
+  mutate(CatalogCVDisplayDSC_no_punct = stringr::str_to_lower(CatalogCVDisplayDSC) |> 
+           stringr::str_remove_all('[[:punct:]]') |> 
+           stringr::str_remove_all("zz")) |> 
+  mutate(distance = stringdist(from_name_no_punct, CatalogCVDisplayDSC_no_punct)) |>
+  group_by(CatalogCVDisplayDSC) %>% 
+  arrange(distance) %>% 
+  slice(1:1) %>% 
+  ungroup() |> 
+  mutate(sim_score = distance/stringr::str_length(CatalogCVDisplayDSC_no_punct)) |> 
+  filter(sim_score <= 0.4444444 ) |> 
+  arrange(desc(sim_score)) 
+
+dcross |> head()
+```
+```{r}
+dcross <- 
+  dcross |>  
+ # rename(CAtalogCVDisplayDSC=catalogCVDisplayDSC)
+  rename(CAtalogCVCD=CatalogCVCD)
+
+dcross
+```
+
+
+
+```{r}
+
+xmlcross <- 
+xml_from_name |> 
+  mutate(from_name_nop = stringr::str_to_lower(from_name) |> 
+           stringr::str_remove_all('[[:punct:]]')) |>  head(10000) |> 
+  tidyr::crossing(table1) %>%  
+  mutate(CatalogCVDisplayDSC_nop = stringr::str_to_lower(CatalogCVDisplayDSC) |> 
+           stringr::str_remove_all('[[:punct:]]') |> 
+           stringr::str_remove_all("zz")) |> 
+  mutate(distance = stringdist(from_name_nop, CatalogCVDisplayDSC_nop)) |>
+  group_by(CatalogCVDisplayDSC) %>% 
+  arrange(distance) %>% 
+  slice(1:1) %>% 
+  ungroup() |> 
+  mutate(sim_score = distance/stringr::str_length(CatalogCVDisplayDSC_nop)) |> 
+  filter(distance <= 5 ) |> 
+  arrange(desc(sim_score))|> 
+  head(10000)
+xmlcross
+
+```
+```{r}
+
+xml_cross <- 
+xml_from_name |> 
+  mutate(from_name_nop = stringr::str_to_lower(from_name) |> 
+           stringr::str_remove_all('[[:punct:]]')) |> 
+  tidyr::crossing(table1) %>%  
+  mutate(CatalogCVDisplayDSC_nop = stringr::str_to_lower(CatalogCVDisplayDSC) |> 
+           stringr::str_remove_all('[[:punct:]]') |> 
+           stringr::str_remove_all("zz")) |> 
+  mutate(distance = stringdist(from_name_nop, CatalogCVDisplayDSC_nop)) |>
+  group_by(CatalogCVDisplayDSC) %>% 
+  arrange(distance) %>% 
+  slice(1:1) %>% 
+  ungroup() |> 
+  mutate(sim_score = distance/stringr::str_length(CatalogCVDisplayDSC_nop)) |> 
+  filter(distance <= 5 ) |> 
+  arrange(desc(sim_score))
+
+xml_cross |> head()
+```
+## xcross
+
+```{r}
+
+xcross <- 
+  xml_from_name |> 
+  mutate(from_name_nop = stringr::str_to_lower(from_name) |> 
+           stringr::str_remove_all('[[:punct:]]')) |> 
+  tidyr::crossing(table1) %>%  
+  mutate(CatalogCVDisplayDSC_nop = stringr::str_to_lower(CatalogCVDisplayDSC) |> 
+           stringr::str_remove_all('[[:punct:]]') |> 
+           stringr::str_remove_all("zz")) |> 
+  mutate(distance = stringdist(from_name_nop, CatalogCVDisplayDSC_nop)) |>
+  group_by(CatalogCVDisplayDSC) %>% 
+  arrange(distance) %>% 
+  slice(1:1) %>% 
+  ungroup() |> 
+  mutate(sim_score = distance/stringr::str_length(CatalogCVDisplayDSC_nop)) |> 
+  filter(sim_score < 0.8571429 ) |> 
+  arrange((sim_score))
+
+xcross
+```
+```{r}
+xcross <- 
+  xcross |>  
+  rename(xcatalogCVDisplayDSC=catalogCVDisplayDSC)
+
+xcross
+```
+
+
+```{r}
+xml_from_name |> 
+  mutate(from_name_3 = stringr::str_to_lower(from_name)) |>
+  mutate(from_name_3 = stringr::str_remove_all(from_name_3, '[[:punct:]]')) |> 
+  filter(from_name != from_name_3) |>  head() |> 
+  head(10) |> 
+  head(10) |> 
+  tidyr::crossing(table1) %>% 
+  mutate(distance = stringdist(from_name, CatalogCVDisplayDSC)) %>% 
+  group_by(from_name) %>% 
+  arrange(distance) %>% 
+  slice(1:10) %>% 
+  ungroup() |> 
+  arrange(CatalogCVDisplayDSC, distance) |> 
+  head(100)
+```
+##crosswalk
+#1
+```{r}
+xcrosswalk <- tidyr::crossing(xcross, table1) %>% 
+  mutate(distance = stringdist(from_name, CatalogCVDisplayDSC)) %>% 
+  group_by(from_name) %>% 
+  arrange(distance) %>% 
+  slice(1:10) %>% 
+  ungroup()
+
+xcrosswalk
+```
+#3
+```{r}
+finalcw <- 
+  
+  xcrosswalk |> 
+  bind_rows(dcrosswalk) |> 
+  arrange(distance)
+
+
+finalcw |> head()
+
+```
+
+```{r}
+finalcw <- 
+finalcw |> 
+  select(CatalogCVCD, CatalogCVDisplayDSC,from_name) 
+
+
+
+finalcw
+```
+
+
+
+#2
+```{r}
+dcrosswalk <- tidyr::crossing(dcross, table1) %>% 
+  mutate(distance = stringdist(from_name, CatalogCVDisplayDSC)) %>% 
+  group_by(from_name) %>% 
+  
+  arrange(distance) %>% 
+  slice(1:10) %>% 
+  ungroup()
+
+dcrosswalk
+```
+#upload to experiments
+
+```{r}
+data.table::fwrite(finalcw,here::here('data','finalcw.csv'))
+
+```
+
+
+```{r}
+rxnormCrosswalk <- data.table::fread(here::here('data','finalcw.csv'))
+
+```
+
+
+```{r}
+coni <- DBI::dbConnect(odbc::odbc(),
+                 Driver = "SQL Server",
+                 Server = "icwwolfram01vg",
+                 Database = "Experiments")
+
+
+```
+
+
+
+```{r}
+#'Upload table from RD to Experiments
+#'@par .d The R data table
+#'@par .conn A connection to Experiments
+#'@par .schema The schema in Experiments to write to
+#'@par .append Set to FALSE if writing a complet data set
+#'@par .overwrite Set to TRUE to overwrite an old table
+#'@par .prefix A prefix to the table name to identify its group
+uploadTableToExperiments <- function(.d
+                                     , .targetTableName
+                                     , .conn
+                                     , .schema    = 'Reference'
+                                     , .append    = FALSE
+                                     , .overwrite = TRUE
+                                     , .prefix    = 'poojyatha_venkatesh_medrt'){
+  # Create Id needed for writting a table
+  MRT <- DBI::Id( 
+    schema = .schema  
+    ,table  = glue::glue("{.prefix}_{.targetTableName}")  
+    )
+  
+  result <-
+     .d %>% 
+     DBI::dbWriteTable(  
+       conn      = .conn,  
+       name      = MRT,   
+       value     = .,  
+       append    = .append, 
+       overwrite = .overwrite)  
+  print(glue::glue("{.schema}.{.prefix}_{.targetTableName}"))
+  
+  return(dplyr::tbl(.conn, dbplyr::in_schema(.schema, glue::glue('{.prefix}_{.targetTableName}'))) %>% head())
+}
+```
+
+```{r}
+rxnormCrosswalk %>% uploadTableToExperiments('rxnormCrosswalk',.conn = coni,
+.prefix    = 'poojyatha_venkatesh')
+```
+```{r}
+ tbl(coni, dbplyr::in_schema('Reference', 'poojyatha_venkatesh_rxnormCrosswalk')) %>% head() 
+```
+
+
+```{r}
+tbl(coni, in_schema('Reference','poojyatha_venkatesh_medrt_poojyatha_venkatesh_medrt_rxnormcrosswalk')) %>% 
+  head()
+```
+
+#Experiments 
+
+##dts concept properties 
+```{r}
+intable <- 'poojyatha_venkatesh_medrt_dts_concept_properties'
+
+rxnorm_dts_concept_properties <- 
+dbplyr::in_schema('Reference', intable)  %>%
+  tbl(src = coni, .) %>%
+  collect() %>%
+  pivot_wider(names_from = 'property_name', values_from = 'property_value') %>%
+  mutate( CTY2 = stringr::str_extract(name, '\\[.*\\]')) %>%
+  mutate( CTY2 = stringr::str_remove_all(CTY2, '\\[|\\]')) %>%
+  mutate(name = stringr::str_remove(name, '\\[.*\\]')) %>%
+ # filter(CTY2 == "Preparations") %>%
+  select(-CTY2)
+```
+
+```{r}
+data.table::fwrite(rxnorm_dts_concept_properties,here::here('data','rxnorm_dts_concept_properties.csv'))
+
+```
+
+```{r}
+rxnorm_dts_concept_properties <- data.table::fread(here::here('data','rxnorm_dts_concept_properties.csv'))
+
+```
+
+```{r}
+rxnorm_dts_concept_properties |> head()
+```
+
+```{r}
+rxnorm_dts_concept_properties %>% uploadTableToExperiments('rxnorm_dts_concept_properties',.conn = coni,
+.prefix    = 'poojyatha_venkatesh')
+```
+
+
+```{r}
+ tbl(coni, dbplyr::in_schema('Reference', 'poojyatha_venkatesh_rxnorm_dts_concept_properties')) %>% head() 
+```
+       
+## dts concept synonym
+
+```{r}
+intable <- 'poojyatha_venkatesh_medrt_dts_concept_synonyms'
+rxnorm_dts_concept_synonym <- 
+dbplyr::in_schema('Reference', intable)  %>%
+  tbl(src = coni, .) %>%
+  collect() %>%
+  mutate( CTY = stringr::str_extract(cs_name, '\\[.*\\]')) %>%
+  mutate( cs_name = stringr::str_remove_all(cs_name, '\\[|\\]')) %>%
+  mutate( CTY = stringr::str_remove_all(CTY, '\\[|\\]')) %>%
+  filter(preferred)
+```
+
+```{r}
+data.table::fwrite(rxnorm_dts_concept_synonym,here::here('data','rxnorm_dts_concept_synonym.csv'))
+
+```
+
+```{r}
+rxnorm_dts_concept_synonym <- data.table::fread(here::here('data','rxnorm_dts_concept_synonym.csv'))
+
+```
+
+```{r}
+rxnorm_dts_concept_synonym
+```
+```{r}
+rxnorm_dts_concept_synonym %>% uploadTableToExperiments('rxnorm_dts_concept_synonym',.conn = coni,
+.prefix    = 'poojyatha_venkatesh')
+```
+
+
+```{r}
+ tbl(coni, dbplyr::in_schema('Reference', 'poojyatha_venkatesh_rxnorm_dts_concept_synonym')) 
+```
+
+##xml concept synonym 
+
+```{r}
+
+intable <- 'poojyatha_venkatesh_medrt_xml_concept_synonym'
+
+rxnorm_xml_concept_synonym <- 
+dbplyr::in_schema('Reference', intable)  %>%
+  tbl(src = coni, .) %>%
+  collect() %>%
+  mutate( synonym_value = stringr::str_extract(name_syn, '\\[.*\\]')) |> 
+  mutate( synonym_value = stringr::str_remove_all(synonym_value, '\\[|\\]')) |> 
+  mutate(name_syn = stringr::str_remove_all(name_syn,'\\[.*\\]'))
+```
+
+
+```{r}
+rxnorm_xml_concept_synonym
+``` 
+
+```{r}
+
+#how do I also get rid of everything between the square brackets?
+rxnorm_xml_concept_synonym |>
+  mutate( name_syn = stringr::str_remove_all(name_syn, '\\[|\\]')) |> 
+  head()
+```
+```{r}
+rxnorm_xml_concept_synonym 
+```
+
+```{r}
+data.table::fwrite(rxnorm_xml_concept_synonym ,here::here('data','rxnorm_xml_concept_synonym .csv'))
+
+```
+
+
+```{r}
+rxnorm_xml_concept_synonym  <- data.table::fread(here::here('data','rxnorm_xml_concept_synonym .csv'))
+
+```
+
+
+```{r}
+rxnorm_xml_concept_synonym 
+```
+
+poojyatha_venkatesh_medrt_rxnorm_xml_concept_synonym
+
+```{r}
+rxnorm_xml_concept_synonym %>% uploadTableToExperiments('rxnorm_xml_concept_synonym ',.conn = coni,
+.prefix    = 'poojyatha_venkatesh')
+```
+
+
+```{r}
+ tbl(coni, dbplyr::in_schema('Reference', 'poojyatha_venkatesh_rxnorm_xml_concept_synonym')) %>% head() 
+```
+
+##xml concept properties 
+```{r}
+intable <- 'poojyatha_venkatesh_medrt_xml_concept_properties'
+
+rxnorm_xml_concept_properties <- 
+dbplyr::in_schema('Reference', intable)  %>%
+  tbl(src = coni, .) %>%
+  collect() %>%
+  pivot_wider(names_from='property_name',values_from='property_value')
+```
+
+```{r}
+rxnorm_xml_concept_properties |> head()
+```
+
+```{r}
+rxnorm_xml_concept_properties |> head()
+```
+
+
+```{r}
+#get rid of '[MoA]' in name
+
+rxnorm_xml_concept_properties <- 
+rxnorm_xml_concept_properties |> 
+  mutate(name = stringr::str_remove_all(name,'\\[.*\\]'))
+
+rxnorm_xml_concept_properties
+
+  
+```
+
+```{r}
+data.table::fwrite(rxnorm_xml_concept_properties ,here::here('data','rxnorm_xml_concept_properties.csv'))
+
+```
+
+
+```{r}
+rxnorm_xml_concept_properties <- data.table::fread(here::here('data','rxnorm_xml_concept_properties.csv'))
+
+```
+
+
+```{r}
+rxnorm_xml_concept_properties |> head()
+```
+
+```{r}
+dbplyr::in_schema('Reference','poojyatha_venkatesh_medrt_xml_concept_properties' ) 
+```
+
+```{r}
+rxnorm_xml_concept_properties %>% uploadTableToExperiments('rxnorm_xml_concept_properties',.conn = coni,
+.prefix    = 'poojyatha_venkatesh')
+```
+
+
+```{r}
+ tbl(coni, dbplyr::in_schema('Reference', 'poojyatha_venkatesh_rxnorm_xml_concept_properties')) %>% head() 
+```
+
+##xml association
+
+```{r}
+
+
+intable <- 'poojyatha_venkatesh_medrt_xml_assn'
+
+rxnorm_xml_association <- 
+dbplyr::in_schema('Reference', intable)  %>%
+  tbl(src = coni, .) %>%
+  collect() %>%
+  mutate( from_code = stringr::str_extract(from_name, '\\[.*\\]')) |> 
+  mutate( from_code = stringr::str_remove_all(from_code, '\\[|\\]')) |> 
+  mutate( to_code = stringr::str_extract(to_name, '\\[.*\\]')) |> 
+  mutate( to_code = stringr::str_remove_all(to_code, '\\[|\\]'))
+```
+
+```{r}
+rxnorm_xml_association <- 
+  rxnorm_xml_association |> 
+  mutate(from_name = stringr::str_remove_all(from_name,'\\[.*\\]')) |> 
+  mutate(to_name = stringr::str_remove_all(to_name,'\\[.*\\]'))
+
+rxnorm_xml_association |> head()
+```
+
+```{r}
+rxnorm_xml_association
+```
+
+```{r}
+data.table::fwrite(rxnorm_xml_association ,here::here('data','rxnorm_xml_association.csv'))
+
+```
+
+
+```{r}
+rxnorm_xml_association <- data.table::fread(here::here('data','rxnorm_xml_association.csv'))
+
+```
+
+```{r}
+rxnorm_xml_association %>% uploadTableToExperiments('rxnorm_xml_association',.conn = coni,
+.prefix    = 'poojyatha_venkatesh')
+```
+
+
+```{r}
+ tbl(coni, dbplyr::in_schema('Reference', 'poojyatha_venkatesh_rxnorm_xml_association')) %>% head() 
+```
+##dts association
+
+```{r}
+
+intable <- 'poojyatha_venkatesh_medrt_dts_association'
+
+rxnorm_dts_association <- 
+dbplyr::in_schema('Reference', intable)  %>%
+  tbl(src = coni, .) %>%
+  collect() %>%
+  mutate( from_code = stringr::str_extract(from_name, '\\[.*\\]')) |> 
+  mutate( from_code = stringr::str_remove_all(from_code, '\\[|\\]')) |> 
+  mutate( to_code = stringr::str_extract(to_name, '\\[.*\\]')) |> 
+  mutate( to_code = stringr::str_remove_all(to_code, '\\[|\\]'))
+
+rxnorm_dts_association
+
+
+```
+
+
+
+```{r}
+rxnorm_dts_association <- 
+rxnorm_dts_association |> 
+  mutate(from_name = stringr::str_remove_all(from_name,'\\[.*\\]')) |> 
+  mutate(to_name = stringr::str_remove_all(to_name,'\\[.*\\]'))
+rxnorm_dts_association |> head()
+```
+```{r}
+rxnorm_dts_association 
+```
+
+```{r}
+
+#create csv files
+data.table::fwrite(rxnorm_dts_association ,here::here('data','rxnorm_dts_association.csv'))
+
+```
+
+
+```{r}
+rxnorm_dts_association <- data.table::fread(here::here('data','rxnorm_dts_association.csv'))
+
+```
+
+
+
+```{r}
+#upload these to azure ds experiments 
+rxnorm_dts_association %>% uploadTableToExperiments('rxnorm_dts_association',.conn = coni,
+.prefix    = 'poojyatha_venkatesh')
+```
+
+
+```{r}
+ tbl(coni, dbplyr::in_schema('Reference', 'poojyatha_venkatesh_rxnorm_dts_association')) %>% head() 
+```
+
+#over1
+
+
+
+```{r}
+xcrosswalk <- tidyr::crossing(xcross, table1) %>% 
+  mutate(distance = stringdist(from_name, CatalogCVDisplayDSC)) %>% 
+  group_by(from_name) %>% 
+  arrange(distance) %>% 
+  slice(1:10) %>% 
+  ungroup()
+
+```
+
+
+
+```{r}
+crosswalk %>%
+  arrange(CatalogCVDisplayDSC) %>% 
+  group_by(CatalogCVDisplayDSC) %>%
+  arrange(distance) %>% 
+  slice(1) %>% 
+  mutate(mindist = min(distance)) %>% 
+  ungroup() %>% 
+  arrange(mindist, CatalogCVDisplayDSC) |> 
+  filter(mindist > 1) |> 
+  head(1000)
+```
+
+```{r}
+crosswalk |> head()
+```
+
+
+```{r}
+crosswalk2 <- tidyr::crossing(xml_from_name, table1) %>% 
+  mutate(distance = stringdist(from_name, CatalogCVDisplayDSC)) %>% 
+  group_by(from_name) %>% 
+  arrange(distance) %>% 
+  slice(1:10) %>% 
+  ungroup()
+
+
+```
+
+
+```{r}
+crosswalk2 %>%
+  arrange(CatalogCVDisplayDSC) %>% 
+  group_by(CatalogCVDisplayDSC) %>%
+  arrange(distance) %>% 
+  slice(1) %>% 
+  mutate(mindist = min(distance)) %>% 
+  ungroup() %>% 
+  arrange(mindist, CatalogCVDisplayDSC) %>% 
+  count()
+```
+
+```{r}
+crosswalk2 %>%
+  arrange(CatalogCVDisplayDSC) %>% 
+  group_by(CatalogCVDisplayDSC) %>%
+  arrange(distance) %>% 
+  slice(1) %>% 
+  mutate(mindist = min(distance))
+```
+
+
+```{r}
+crosswalk %>%
+  arrange(CatalogCVDisplayDSC) %>% 
+  group_by(CatalogCVDisplayDSC) %>%
+  arrange(distance) %>% 
+  slice(1) %>% 
+  mutate(mindist = min(distance))
+```
+
+
+```{r}
+crosswalk %>%
+  filter(CatalogCVDisplayDSC == 'diclofenac') %>% 
+  arrange(from_name) %>% 
+  head(100)
+```
+
+
+
+```{r}
+xml_from_name %>% count()
+```
+```{r}
+crosswalk |> head()
+```
+```{r}
+crosswalk2 |> 
+  arrange(distance) |> 
+  head()
+```
+#rowbinding
+
+```{r}
+crosswalk |> 
+  bind_rows(crosswalk2) |> 
+  arrange(distance)
+```
+
