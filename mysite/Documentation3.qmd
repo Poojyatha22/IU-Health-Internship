@@ -1,0 +1,123 @@
+---
+title: "CSV File reading"
+author: "Harlan A Nelson, Poojytaha Venkatesh"
+format: html
+editor: visual
+---
+
+R set-up
+
+```{r setup}
+pacman::p_load(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)
+```
+
+Loading the xml document :
+
+```{r}
+d <- xml2::read_xml(here::here("inst/Core_MEDRT_DTS/Core_MEDRT_20220705_DTS.xml"))
+```
+
+Namespace
+
+```{r}
+dns <- xml_find_all(d, 'namespace') 
+```
+
+```{r}
+dns[1] %>% htmltidy::xml_view()
+```
+
+```{r}
+ns <- data.table::fread(here::here('data','dts_namespace.csv'))
+ns %>% head()
+```
+
+Association Type
+
+```{r}
+asntyp <- xml_find_all(d, 'assntype') 
+```
+
+```{r}
+asntyp[3] %>% htmltidy::xml_view()
+```
+
+```{r}
+at <- data.table::fread(here::here('data','dts_associationtype.csv'))
+at %>% head()
+```
+
+Association
+
+```{r}
+asn <-  xml_find_all(d, 'association')  
+
+```
+
+```{r}
+asn[1] %>% htmltidy::xml_view()
+```
+
+```{r}
+an <- data.table::fread(here::here('data','dts_association.csv'))
+an %>% head()
+```
+
+Qualtype
+
+```{r}
+
+qt <-  xml_find_all(d, 'qualtype') 
+```
+
+```{r}
+qt[1] %>% htmltidy::xml_view()
+```
+
+```{r}
+qt <- data.table::fread(here::here('data','dts_qualtype.csv'))
+qt %>% head()
+```
+
+Concept tag :
+
+```{r}
+
+concept <-  xml_find_all(d, 'concept')
+```
+
+```{r}
+concept[1] %>% htmltidy::xml_view()
+```
+
+The concept tag has been split into two tables :
+
+\[ 1 \] Concept properties
+
+```{r}
+cp <- data.table::fread(here::here('data','dts_concept_properties.csv'))
+cp %>% head()
+```
+
+\[ 2 \] Concept Synonyms
+
+```{r}
+cs <- data.table::fread(here::here('data','dts_concept_synonyms.csv'))
+cs %>% head()
+```
+
+Term tag
+
+```{r}
+
+term <-  xml_find_all(d, 'term')
+```
+
+```{r}
+term[1] %>% htmltidy::xml_view()
+```
+
+```{r}
+ter <- data.table::fread(here::here('data','dts_term.csv'))
+ter %>% head()
+```
