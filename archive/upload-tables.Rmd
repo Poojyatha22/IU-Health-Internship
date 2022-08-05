@@ -1,0 +1,277 @@
+---
+title: "Upload Tables"
+author: "Harlan A Nelson"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+Purpose
+
+:   Write R tables to the Wolfram Expiriments
+
+:   Copy tables from Experiments to Azure reporting research \#
+
+    ```{r setup, include=FALSE}
+    knitr::opts_chunk$set(echo = TRUE)
+    pacman::p_load(DBI, tidyverse, dbplyr)
+    ```
+
+    # 
+
+    ```{r, include=FALSE, eval=TRUE}
+    coni <- DBI::dbConnect(odbc::odbc(),
+                     Driver = "SQL Server",
+                     Server = "icwwolfram01vg",
+                     Database = "Experiments")
+    ```
+
+```{r connection, cache=FALSE}
+# The connection to CERNER data.
+con <- odbc::dbConnect(odbc::odbc(), "EDW", uid = 'hnelson3@iuhealth.org')
+```
+
+# 
+
+```{r}
+#'Upload table from RD to Experiments
+#'@par .d The R data table
+#'@par .conn A connection to Experiments
+#'@par .schema The schema in Experiments to write to
+#'@par .append Set to FALSE if writing a complet data set
+#'@par .overwrite Set to TRUE to overwrite an old table
+#'@par .prefix A prefix to the table name to identify its group
+uploadTableToExperiments <- function(.d
+                                     , .targetTableName
+                                     , .conn
+                                     , .schema    = 'Reference'
+                                     , .append    = FALSE
+                                     , .overwrite = TRUE
+                                     , .prefix    = 'poojyatha_venkatesh_medrt'){
+  # Create Id needed for writting a table
+  MRT <- DBI::Id( 
+    schema = .schema  
+    ,table  = glue::glue("{.prefix}_{.targetTableName}")  
+    )
+  
+  result <-
+     .d %>% 
+     DBI::dbWriteTable(  
+       conn      = .conn,  
+       name      = MRT,   
+       value     = .,  
+       append    = .append, 
+       overwrite = .overwrite)  
+  
+  return(dplyr::tbl(.conn, dbplyr::in_schema(.schema, glue::glue('{.prefix}_{.targetTableName}'))) %>% head())
+}
+
+
+
+
+```
+
+```{r}
+  # Create Id needed for writting a table
+  MRT <- DBI::Id( 
+    schema = 'Reference'  
+    ,table  = glue::glue("poojyatha_venkatesh_medrt_xml_assn")  
+    )
+  
+
+```
+
+```{r}
+tbl(coni, in_schema('Reference','poojyatha_venkatesh_medrt_xml_assn')) %>% 
+  count()
+```
+
+```{r}
+DBI::dbWriteTable(  
+       conn      = coni,
+       name      = MRT,   
+       value     = xassn,
+       append    = FALSE,
+       overwrite = TRUE)
+```
+
+```{r}
+xassn %>% uploadTableToExperiments('xml_assn',.conn = coni)
+```
+
+##dts
+
+```{r}
+dc1 %>% uploadTableToExperiments('dts_concept_properties',coni)
+```
+
+```{r}
+dc33 %>% uploadTableToExperiments('dts_concept_synonyms',coni)
+```
+
+```{r}
+daa5 %>%  uploadTableToExperiments('dts_association',coni)
+```
+
+```{r}
+dt %>%  uploadTableToExperiments('dts_term',coni)
+```
+
+```{r}
+dq10 %>%  head()
+dql0 %>%  uploadTableToExperiments('dts_qualtype',coni)
+```
+
+```{r}
+dat0  %>%  uploadTableToExperiments('dts_associationtype',coni)
+```
+
+```{r}
+dns0 %>% uploadTableToExperiments('dts_namespace',coni)
+```
+
+## xml
+
+```{r}
+xname %>% uploadTableToExperiments('xml_namespace',coni)
+```
+
+```{r}
+xrefname %>% uploadTableToExperiments('xml_referenced_namespace',coni)
+```
+
+```{r}
+xproptype %>% uploadTableToExperiments('xml_proptype',coni)
+```
+
+```{r}
+xqualtype %>% uploadTableToExperiments('xml_qualtype',coni)
+```
+
+```{r}
+xterm %>% uploadTableToExperiments('xml_term',coni)
+```
+
+```{r}
+xassntype %>% uploadTableToExperiments('xml_assntype',coni)
+```
+
+```{r}
+xassn %>% uploadTableToExperiments('xml_assn',coni)
+```
+
+```{r}
+xpropconcept %>% uploadTableToExperiments('xml_concept_properties',coni)
+```
+
+```{r}
+xsynonymconcept %>% uploadTableToExperiments('xml_concept_synonym',coni)
+```
+
+```{r}
+#! Write a chunk of data to Azure
+#! @param .data The chunk of data to write
+#! @param .ID The ID of the Azure table where the chunk will be written or appended.
+#! @param .con The Azure connection
+#! @param .append Indicate append or overwrite
+#! @param overwrite Indicate overwrite.
+write_chunk <- function(.data, .ID, .con, .append = TRUE, .overwrite = FALSE){
+ 
+   result <-
+     .data %>% 
+     DBI::dbWriteTable(  
+       conn      = .con,  
+       name      = .ID,   
+       value     = .,  
+       append    = .append, 
+       overwrite = .overwrite) 
+  
+}
+
+MRT <- DBI::Id( 
+    schema = .azure_schema  
+    ,table  = glue::glue("{.azure_prefix}_{.targetTableName}")  
+)
+ 
+remaining %>% 
+  write_chunk(.ID = MRT, .con = con,  )
+
+```
+
+```{r}
+
+moveToReportingReseach <- function(  .con
+                                   , .conExperiments
+                                   , .prefix
+                                   , .targetTableName 
+                                   , .append            = FALSE
+                                   , .overwrite         = TRUE
+                                   , .prefixExperiments = 'poojyatha_venkatesh_medrt'
+                                   , .schemaExperiments = 'Reference'
+                                   , .prefixAzure       = 'RxNorm'
+                                   , .schemaAzure       = 'Reporting_Research'
+                                   ) {   
+  
+  remaining =  dplyr::tbl(.conExperiments
+                          , dbplyr::in_schema(.schemaExperiments , glue::glue('{.prefixExperiments}_{.targetTableName}'))) %>% 
+    collect()   
+  
+  MRT <- DBI::Id( 
+    schema = .schemaAzure  
+    ,table  = glue::glue("{.prefixAzure}_{.targetTableName}")  
+    )  
+  
+  remaining %>%  
+    write_chunk(.ID = MRT, .con = con, .append = .append, .overwrite = .overwrite )
+  
+   result =  dplyr::tbl(.con , dbplyr::in_schema(.schemaAzure , glue::glue("{.prefixAzure}_{.targetTableName}"))) %>%    
+     head() 
+   
+   return(result)
+   
+   }
+
+
+```
+
+## Sample upload to Experiments
+
+```{r}
+
+uploadMedRt <- function(.d, tableName,type) {  
+   .d %>% uploadTableToExperiments(.targetTableName = tableName, .conn = coni) 
+  #  Verify the upload 
+  tbl(coni, dbplyr::in_schema('Reference', 
+                              glue::glue('poojyatha_venkatesh_medrt_{type}_{tableName}')))%>% head() 
+  moveToReportingReseach(.con = con, .conExperiments = coni, .targetTableName = tableName ) 
+}
+```
+
+Assuming the table r exists, upload it to Experiments as table "namespace".
+
+```{r}
+uploadMedRt(n, 'namespace','xml')
+```
+
+```{r}
+uploadMedRt(r, 'referencednamespace')
+```
+
+```{r}
+uploadMedRt(p, 'proptype')
+```
+
+```{r}
+uploadMedRt(q, 'qualtype')
+```
+
+```{r}
+uploadMedRt(t, 'term')
+```
+
+```{r}
+uploadMedRt(A1, 'assn_type')
+```
+
+```{r}
+uploadMedRt(a1, 'association')
+```
