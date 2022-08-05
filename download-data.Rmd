@@ -1,0 +1,39 @@
+---
+title: "Uploadstuff"
+output: html_document
+date: '2022-06-28'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE, eval=TRUE}
+coni <- DBI::dbConnect(odbc::odbc(),
+                 Driver = "SQL Server",
+                 Server = "icwwolfram01vg",
+                 Database = "Experiments")
+```
+
+```{r connection, cache=FALSE}
+# The connection to CERNER data.
+con <- odbc::dbConnect(odbc::odbc(), "EDW", uid = 'pvenkatesh@iuhealth.org')
+```
+
+
+
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+uploadMedRt <- function(.d, tableName) {  
+   .d %>% uploadTableToExperiments(.targetTableName = tableName, .conn = coni) 
+  #  Verify the upload 
+  tbl(coni, dbplyr::in_schema('Reference', 'poojyatha_venkatesh_medrt_referencednamespace')) %>% head() 
+  moveToReportingReseach(.con = con, .conExperiments = coni, .targetTableName = tableName ) 
+}
+```
+
