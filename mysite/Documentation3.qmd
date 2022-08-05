@@ -1,6 +1,6 @@
 ---
 title: "CSV File reading"
-author: "Harlan A Nelson, Poojytaha Venkatesh"
+author: "Harlan A Nelson, Poojyatha Venkatesh"
 format: html
 editor: visual
 ---
