@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.592">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Harlan A Nelson, Poojytaha Venkatesh">
+
+<title>CSV File reading</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="Documentation 3_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Documentation 3_files/libs/quarto-html/quarto.js"></script>
+<script src="Documentation 3_files/libs/quarto-html/popper.min.js"></script>
+<script src="Documentation 3_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Documentation 3_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Documentation 3_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Documentation 3_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Documentation 3_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Documentation 3_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Documentation 3_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+<script src="Documentation 3_files/libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="Documentation 3_files/libs/highlightjs-9.0.0/highlight.pack.min.js"></script>
+<link href="Documentation 3_files/libs/vkbeautify-0.99.00/wdgt.css" rel="stylesheet">
+<script src="Documentation 3_files/libs/vkbeautify-0.99.00/vkbeautify.js"></script>
+<script src="Documentation 3_files/libs/xmlview-binding-0.5.0/xmlview.js"></script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">CSV File reading</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Harlan A Nelson, Poojytaha Venkatesh </p>
+          </div>
+  </div>
+    
+    
+  </div>
+  
+
+</header>
+
+<p>R set-up</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Loading the xml document :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> xml2<span class="sc">::</span><span class="fu">read_xml</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"inst/Core_MEDRT_DTS/Core_MEDRT_20220705_DTS.xml"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Namespace</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dns <span class="ot">&lt;-</span> <span class="fu">xml_find_all</span>(d, <span class="st">'namespace'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dns[<span class="dv">1</span>] <span class="sc">%&gt;%</span> htmltidy<span class="sc">::</span><span class="fu">xml_view</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-ca84bbe15df5caa09923" style="width:100%;height:480px;" class="xmlview html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ca84bbe15df5caa09923">{"x":{"xmlDoc":"<namespace type=\"Thesaurus\">\n  <name>MED-RT<\/name>\n  <code>N32768<\/code>\n  <id>32768<\/id>\n  <version>2022.07.06<\/version>\n  <authority>Apelon, Inc.<\/authority>\n<\/namespace>","styleSheet":"default","addFilter":false,"applyXPath":null,"scroll":false,"xmlDocName":"."},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ns <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">fread</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">'data'</span>,<span class="st">'dts_namespace.csv'</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ns <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     name   code    id    version    authority
+1: MED-RT N32768 32768 2022.05.02 Apelon, Inc.</code></pre>
+</div>
+</div>
+<p>Association Type</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>asntyp <span class="ot">&lt;-</span> <span class="fu">xml_find_all</span>(d, <span class="st">'assntype'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>asntyp[<span class="dv">3</span>] <span class="sc">%&gt;%</span> htmltidy<span class="sc">::</span><span class="fu">xml_view</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-b365466073628a443d3a" style="width:100%;height:480px;" class="xmlview html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b365466073628a443d3a">{"x":{"xmlDoc":"<assntype type=\"C\" purpose=\"A\">\n  <namespace>MED-RT<\/namespace>\n  <name>Parent Of<\/name>\n  <id>1<\/id>\n  <inverse_name>Child Of<\/inverse_name>\n<\/assntype>","styleSheet":"default","addFilter":false,"applyXPath":null,"scroll":false,"xmlDocName":"."},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>at <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">fread</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">'data'</span>,<span class="st">'dts_associationtype.csv'</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>at <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   namespace           name id       inverse_name
+1:    MED-RT Preferred Term  2 Preferred Term for
+2:    MED-RT        Synonym  5        Synonym for
+3:    MED-RT      Parent Of  1           Child Of
+4:    MED-RT     Synonym Of  9         Synonym Of
+5:    MED-RT        has_MoA 10             MoA_of
+6:    MED-RT         has_PE 11              PE_of</code></pre>
+</div>
+</div>
+<p>Association</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>asn <span class="ot">&lt;-</span>  <span class="fu">xml_find_all</span>(d, <span class="st">'association'</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>asn[<span class="dv">1</span>] <span class="sc">%&gt;%</span> htmltidy<span class="sc">::</span><span class="fu">xml_view</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-454863d70e677bf8c0e3" style="width:100%;height:480px;" class="xmlview html-widget"></div>
+<script type="application/json" data-for="htmlwidget-454863d70e677bf8c0e3">{"x":{"xmlDoc":"<association>\n  <namespace>MED-RT<\/namespace>\n  <name>Synonym Of<\/name>\n  <from_namespace>RxNorm R<\/from_namespace>\n  <from_name>(all-Z)-4,7,10,13,16-docosapentaenoic acid [1360626]<\/from_name>\n  <to_namespace>MeSH<\/to_namespace>\n  <to_name>cis-7,10,13,16,19-docosapentaenoic acid [M000636321]<\/to_name>\n  <qualifier>\n    <content>MED-RT<\/content>\n    <name>Authority<\/name>\n    <value>NLMUMLS<\/value>\n  <\/qualifier>\n<\/association>","styleSheet":"default","addFilter":false,"applyXPath":null,"scroll":false,"xmlDocName":"."},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>an <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">fread</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">'data'</span>,<span class="st">'dts_association.csv'</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>an <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   namespace association_name from_namespace
+1:    MED-RT       Synonym Of       RxNorm R
+2:    MED-RT       Synonym Of       RxNorm R
+3:    MED-RT       Synonym Of       RxNorm R
+4:    MED-RT       Synonym Of       RxNorm R
+5:    MED-RT       Synonym Of       RxNorm R
+6:    MED-RT       Synonym Of       RxNorm R
+                                                     from_name to_namespace
+1:        (all-Z)-4,7,10,13,16-docosapentaenoic acid [1360626]         MeSH
+2: .alpha.,.beta.-methylene adenosine 5'-diphosphate [2552302]         MeSH
+3:                      .alpha.-chlorohydrin, (+/-)- [2396781]         MeSH
+4:                              .alpha.-phellandrene [2530131]         MeSH
+5:                                 .alpha.-terpinene [2542349]         MeSH
+6:                                     .beta.-ionone [2371702]         MeSH
+                                                   to_name qualifier_content
+1:    cis-7,10,13,16,19-docosapentaenoic acid [M000636321]            MED-RT
+2: alpha,beta-methyleneadenosine 5'-diphosphate [M0515143]            MED-RT
+3:                           alpha-Chlorohydrin [M0000786]            MED-RT
+4:                           alpha phellandrene [M0046925]            MED-RT
+5:                              alpha-terpinene [M0313696]            MED-RT
+6:                                  beta-ionone [M0051759]            MED-RT
+   qualifier_name qualifier_value
+1:      Authority         NLMUMLS
+2:      Authority         NLMUMLS
+3:      Authority         NLMUMLS
+4:      Authority         NLMUMLS
+5:      Authority         NLMUMLS
+6:      Authority         NLMUMLS</code></pre>
+</div>
+</div>
+<p>Qualtype</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>qt <span class="ot">&lt;-</span>  <span class="fu">xml_find_all</span>(d, <span class="st">'qualtype'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>qt[<span class="dv">1</span>] <span class="sc">%&gt;%</span> htmltidy<span class="sc">::</span><span class="fu">xml_view</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-31c25b420b7509fb1b7d" style="width:100%;height:480px;" class="xmlview html-widget"></div>
+<script type="application/json" data-for="htmlwidget-31c25b420b7509fb1b7d">{"x":{"xmlDoc":"<qualtype type=\"CA\">\n  <content>MED-RT<\/content>\n  <name>Authority<\/name>\n  <id>1<\/id>\n<\/qualtype>","styleSheet":"default","addFilter":false,"applyXPath":null,"scroll":false,"xmlDocName":"."},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>qt <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">fread</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">'data'</span>,<span class="st">'dts_qualtype.csv'</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>qt <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   content      name id
+1:  MED-RT Authority  1</code></pre>
+</div>
+</div>
+<p>Concept tag :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>concept <span class="ot">&lt;-</span>  <span class="fu">xml_find_all</span>(d, <span class="st">'concept'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>concept[<span class="dv">1</span>] <span class="sc">%&gt;%</span> htmltidy<span class="sc">::</span><span class="fu">xml_view</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-dbbf016e26fa4f5e3d86" style="width:100%;height:480px;" class="xmlview html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dbbf016e26fa4f5e3d86">{"x":{"xmlDoc":"<concept>\n  <namespace>MED-RT<\/namespace>\n  <name>1-Compartment [PK]<\/name>\n  <code>C298<\/code>\n  <id>299<\/id>\n  <status>ACTIVE<\/status>\n  <synonym>\n    <namespace>MED-RT<\/namespace>\n    <name>Preferred Term<\/name>\n    <to_namespace>MED-RT<\/to_namespace>\n    <to_name>1-Compartment<\/to_name>\n    <to_code>T82<\/to_code>\n    <preferred>true<\/preferred>\n  <\/synonym>\n  <property>\n    <content>MED-RT<\/content>\n    <name>CTY<\/name>\n    <value>PK<\/value>\n  <\/property>\n  <property>\n    <content>MED-RT<\/content>\n    <name>NUI<\/name>\n    <value>N0000000060<\/value>\n  <\/property>\n<\/concept>","styleSheet":"default","addFilter":false,"applyXPath":null,"scroll":false,"xmlDocName":"."},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>The concept tag has been split into two tables :</p>
+<p>[ 1 ] Concept properties</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>cp <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">fread</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">'data'</span>,<span class="st">'dts_concept_properties.csv'</span>))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>cp <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   namespace                                  name    code status
+1:    MED-RT                    1-Compartment [PK]    C298 ACTIVE
+2:    MED-RT 14-alpha Demethylase Inhibitors [MoA] C300411 ACTIVE
+3:    MED-RT                    2-Compartment [PK]    C300 ACTIVE
+4:    MED-RT                    3-Compartment [PK]    C302 ACTIVE
+   property_content CTY         NUI
+1:           MED-RT  PK N0000000060
+2:           MED-RT MoA N0000020025
+3:           MED-RT  PK N0000000061
+4:           MED-RT  PK N0000000062</code></pre>
+</div>
+</div>
+<p>[ 2 ] Concept Synonyms</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cs <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">fread</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">'data'</span>,<span class="st">'dts_concept_synonyms.csv'</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cs <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   cs_namespace                                              cs_name    code
+1:       MED-RT                                   1-Compartment [PK]    C298
+2:       MED-RT                14-alpha Demethylase Inhibitors [MoA] C300411
+3:       MED-RT                                   2-Compartment [PK]    C300
+4:       MED-RT                                   3-Compartment [PK]    C302
+5:       MED-RT 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor [EPC] C635228
+6:       MED-RT 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor [EPC] C635228
+       id status namespace           name to_namespace
+1:    299 ACTIVE    MED-RT Preferred Term       MED-RT
+2: 300411 ACTIVE    MED-RT Preferred Term       MED-RT
+3:    301 ACTIVE    MED-RT Preferred Term       MED-RT
+4:    303 ACTIVE    MED-RT Preferred Term       MED-RT
+5: 635228 ACTIVE    MED-RT Preferred Term       MED-RT
+6: 635228 ACTIVE    MED-RT Preferred Term       MED-RT
+                                          to_name to_code preferred
+1:                                  1-Compartment     T82      TRUE
+2:                14-alpha Demethylase Inhibitors    T162      TRUE
+3:                                  2-Compartment    T309      TRUE
+4:                                  3-Compartment    T438      TRUE
+5: 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor    T618      TRUE
+6: 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor    T617      TRUE</code></pre>
+</div>
+</div>
+<p>Term tag</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>term <span class="ot">&lt;-</span>  <span class="fu">xml_find_all</span>(d, <span class="st">'term'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>term[<span class="dv">1</span>] <span class="sc">%&gt;%</span> htmltidy<span class="sc">::</span><span class="fu">xml_view</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-fe20a9356855324a0bb8" style="width:100%;height:480px;" class="xmlview html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fe20a9356855324a0bb8">{"x":{"xmlDoc":"<term>\n  <namespace>MED-RT<\/namespace>\n  <name> Cyclin-dependent Kinase 4 Inhibitors<\/name>\n  <code>T58551<\/code>\n  <id>58551<\/id>\n  <status>ACTIVE<\/status>\n<\/term>","styleSheet":"default","addFilter":false,"applyXPath":null,"scroll":false,"xmlDocName":"."},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ter <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">fread</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">'data'</span>,<span class="st">'dts_term.csv'</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>ter <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   namespace                                 name   code    id status
+1:    MED-RT Cyclin-dependent Kinase 4 Inhibitors T58551 58551 ACTIVE
+2:    MED-RT Cyclin-dependent Kinase 6 Inhibitors T58554 58554 ACTIVE
+3:    MED-RT                        1-Compartment    T82    82 ACTIVE
+4:    MED-RT      14-alpha Demethylase Inhibitors   T162   162 ACTIVE
+5:    MED-RT                        2-Compartment   T309   309 ACTIVE
+6:    MED-RT                        3-Compartment   T438   438 ACTIVE</code></pre>
+</div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,5 +1,11 @@
 ---
-title: "About"
+title: "Indiana University Health - Data Science Internship"
 ---
 
-About this site
+Hi Everyone!
+
+I just though I'll share my work at Indiana University Health as a Data Science Intern! The goal of this internship was to download drug data from the RxNorm website ( [https://www.nlm.nih.gov/research/umls/rxnorm/overview.html](https://nam12.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm%2Foverview.html&data=05%7C01%7Cpvenkatesh%40iuhealth.org%7Ce1896e7456b04d4a4d2a08da73f4e432%7Cd9d470633f5e4de9bf99f083657fa0fe%7C0%7C0%7C637949792880867184%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=saxlJmUnKlcdMnIim33tSTAP2F0PJdNB9oKgI3VeIto%3D&reserved=0) ), analyse this data and try to merge the data related to patient in the IU Health Server so that we can form cohorts of drugs / patients.
+
+RxNorm is a normlised way of naming drugs. Drugs data could exist in different sources with slightly varied names. So RxNorm has a standard was recognizing these drugs with its nomenclature. It also releases drug related data every month with the updated drug list.
+
+You can see the summary of the work I have done with the help of my awesome supervisor Harlan A Nelson! I hope you gain something useful out of this and thanks for checking this out!

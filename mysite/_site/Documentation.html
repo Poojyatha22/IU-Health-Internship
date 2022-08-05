@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.592">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Poojyatha Venkatesh">
+
+<title>Case Study parsing XML with R demonstrated with RxNorm - IU Health Internship</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="site_libs/highlightjs-9.0.0/highlight.pack.min.js"></script>
+<link href="site_libs/vkbeautify-0.99.00/wdgt.css" rel="stylesheet">
+<script src="site_libs/vkbeautify-0.99.00/vkbeautify.js"></script>
+<script src="site_libs/xmlview-binding-0.5.0/xmlview.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Case Study parsing XML with R demonstrated with RxNorm</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html">Home</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html">about</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./Documentation.html" aria-current="page">Parsing XML file</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Documentation2.html">Working with drugs data and patient data</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Documentation3.html">List of all the xml-to-CSV files</a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">IU Health Internship</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Poojyatha Venkatesh </p>
+          </div>
+  </div>
+    
+    
+  </div>
+  
+
+</header>
+
+<p>RxNorm is a normalised naming system for drugs. Medical data that was unstructured was downloaded. It was in an XML format that was highly complex. The first task was to flatten these xml tags. What was challenging was that these XML documents did not have the same children tags. Even the children tags did not have a structure that was similar to eachother. Every child tag was different and the same children tags had different structures.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a> pacman<span class="sc">::</span><span class="fu">p_load</span>(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We load the xml document here :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> xml2<span class="sc">::</span><span class="fu">read_xml</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"inst/Core_MEDRT_DTS/Core_MEDRT_20220705_DTS.xml"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Out of the entire XML document, we are particularly focused on the &lt;concept&gt; tag :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dconcept <span class="ot">&lt;-</span>  <span class="fu">xml_find_all</span>(d, <span class="st">'concept'</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s see a code snippet of the tag (one of the concept tags):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>htmltidy<span class="sc">::</span><span class="fu">xml_view</span>(dconcept[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-def96144c0fbcebedfa3" style="width:100%;height:480px;" class="xmlview html-widget"></div>
+<script type="application/json" data-for="htmlwidget-def96144c0fbcebedfa3">{"x":{"xmlDoc":"<concept>\n  <namespace>MED-RT<\/namespace>\n  <name>1-Compartment [PK]<\/name>\n  <code>C298<\/code>\n  <id>299<\/id>\n  <status>ACTIVE<\/status>\n  <synonym>\n    <namespace>MED-RT<\/namespace>\n    <name>Preferred Term<\/name>\n    <to_namespace>MED-RT<\/to_namespace>\n    <to_name>1-Compartment<\/to_name>\n    <to_code>T82<\/to_code>\n    <preferred>true<\/preferred>\n  <\/synonym>\n  <property>\n    <content>MED-RT<\/content>\n    <name>CTY<\/name>\n    <value>PK<\/value>\n  <\/property>\n  <property>\n    <content>MED-RT<\/content>\n    <name>NUI<\/name>\n    <value>N0000000060<\/value>\n  <\/property>\n<\/concept>","styleSheet":"default","addFilter":false,"applyXPath":null,"scroll":false,"xmlDocName":"doc"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Let us look at another concept tag :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>htmltidy<span class="sc">::</span><span class="fu">xml_view</span>(dconcept[<span class="dv">9</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-f338a0fd508709c882ce" style="width:100%;height:480px;" class="xmlview html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f338a0fd508709c882ce">{"x":{"xmlDoc":"<concept>\n  <namespace>MED-RT<\/namespace>\n  <name>5-alpha Reductase Inhibitors [MoA]<\/name>\n  <code>C430<\/code>\n  <id>431<\/id>\n  <status>ACTIVE<\/status>\n  <synonym>\n    <namespace>MED-RT<\/namespace>\n    <name>Preferred Term<\/name>\n    <to_namespace>MED-RT<\/to_namespace>\n    <to_name>5-alpha Reductase Inhibitors<\/to_name>\n    <to_code>T740<\/to_code>\n    <preferred>true<\/preferred>\n  <\/synonym>\n  <property>\n    <content>MED-RT<\/content>\n    <name>CTY<\/name>\n    <value>MoA<\/value>\n  <\/property>\n  <property>\n    <content>MED-RT<\/content>\n    <name>NUI<\/name>\n    <value>N0000000126<\/value>\n  <\/property>\n  <association>\n    <namespace>MED-RT<\/namespace>\n    <name>has_MoA<\/name>\n    <from_namespace>RxNorm R<\/from_namespace>\n    <from_name>finasteride [25025]<\/from_name>\n    <to_namespace>MED-RT<\/to_namespace>\n    <to_name>5-alpha Reductase Inhibitors [MoA]<\/to_name>\n    <qualifier>\n      <content>MED-RT<\/content>\n      <name>Authority<\/name>\n      <value>FDASPL<\/value>\n    <\/qualifier>\n    <qualifier>\n      <content>MED-RT<\/content>\n      <name>Authority<\/name>\n      <value>MEDRT<\/value>\n    <\/qualifier>\n  <\/association>\n  <association>\n    <namespace>MED-RT<\/namespace>\n    <name>CI_MoA<\/name>\n    <from_namespace>RxNorm R<\/from_namespace>\n    <from_name>dutasteride [228790]<\/from_name>\n    <to_namespace>MED-RT<\/to_namespace>\n    <to_name>5-alpha Reductase Inhibitors [MoA]<\/to_name>\n    <qualifier>\n      <content>MED-RT<\/content>\n      <name>Authority<\/name>\n      <value>MEDRT<\/value>\n    <\/qualifier>\n  <\/association>\n  <association>\n    <namespace>MED-RT<\/namespace>\n    <name>has_MoA<\/name>\n    <from_namespace>RxNorm R<\/from_namespace>\n    <from_name>saw palmetto extract [236344]<\/from_name>\n    <to_namespace>MED-RT<\/to_namespace>\n    <to_name>5-alpha Reductase Inhibitors [MoA]<\/to_name>\n    <qualifier>\n      <content>MED-RT<\/content>\n      <name>Authority<\/name>\n      <value>MEDRT<\/value>\n    <\/qualifier>\n  <\/association>\n  <association>\n    <namespace>MED-RT<\/namespace>\n    <name>has_MoA<\/name>\n    <from_namespace>RxNorm R<\/from_namespace>\n    <from_name>dutasteride [228790]<\/from_name>\n    <to_namespace>MED-RT<\/to_namespace>\n    <to_name>5-alpha Reductase Inhibitors [MoA]<\/to_name>\n    <qualifier>\n      <content>MED-RT<\/content>\n      <name>Authority<\/name>\n      <value>FDASPL<\/value>\n    <\/qualifier>\n    <qualifier>\n      <content>MED-RT<\/content>\n      <name>Authority<\/name>\n      <value>MEDRT<\/value>\n    <\/qualifier>\n  <\/association>\n<\/concept>","styleSheet":"default","addFilter":false,"applyXPath":null,"scroll":false,"xmlDocName":"doc"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>In the above code snippet, you will notice that the children tags of concept[9] is different from concept[1]. So how do we convert this concept tag into one table when children tags are different? This would be hard to accomplish since we would aim to make each of these sub tags as unique columns in the concept table. Therefore, it is better to make each of these children tags as unique tables while retaining the cother common children tags of concept.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    dconcept[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_list</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span> (<span class="at">c=</span> .)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>d1 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 1
+  c                
+  &lt;list&gt;           
+1 &lt;named list [8]&gt; 
+2 &lt;named list [29]&gt;
+3 &lt;named list [8]&gt; 
+4 &lt;named list [8]&gt; 
+5 &lt;named list [15]&gt;
+6 &lt;named list [12]&gt;</code></pre>
+</div>
+</div>
+<p>Now let us unnest_wider this further to see how it opens out :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  d1 <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(<span class="at">col=</span><span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+New names:
+New names:
+New names:
+New names:
+New names:
+• `property` -&gt; `property...7`
+• `property` -&gt; `property...8`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 35
+  namespace  name   code   id     status synonym      property...7 property...8
+  &lt;list&gt;     &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt;       &lt;list&gt;       &lt;list&gt;      
+1 &lt;list [1]&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;named list&gt; &lt;named list&gt; &lt;named list&gt;
+2 &lt;list [1]&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;named list&gt; &lt;named list&gt; &lt;named list&gt;
+3 &lt;list [1]&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;named list&gt; &lt;named list&gt; &lt;named list&gt;
+4 &lt;list [1]&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;named list&gt; &lt;named list&gt; &lt;named list&gt;
+5 &lt;list [1]&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;NULL&gt;       &lt;NULL&gt;       &lt;NULL&gt;      
+6 &lt;list [1]&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;list&gt; &lt;named list&gt; &lt;named list&gt; &lt;named list&gt;
+# … with 27 more variables: association...9 &lt;list&gt;, association...10 &lt;list&gt;,
+#   association...11 &lt;list&gt;, association...12 &lt;list&gt;, association...13 &lt;list&gt;,
+#   association...14 &lt;list&gt;, association...15 &lt;list&gt;, association...16 &lt;list&gt;,
+#   association...17 &lt;list&gt;, association...18 &lt;list&gt;, association...19 &lt;list&gt;,
+#   association...20 &lt;list&gt;, association...21 &lt;list&gt;, association...22 &lt;list&gt;,
+#   association...23 &lt;list&gt;, association...24 &lt;list&gt;, association...25 &lt;list&gt;,
+#   association...26 &lt;list&gt;, association...27 &lt;list&gt;, …</code></pre>
+</div>
+</div>
+<p>We see that this concept tag has both concept as well as synonym. But we are particularly interested in the &lt;property&gt; sub tag. So</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|message: false</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#|warning: false</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a> dc0<span class="ot">&lt;-</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  dconcept[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>] <span class="sc">%&gt;%</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_list</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">c =</span> .) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(<span class="at">col=</span>c) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(namespace<span class="sc">:</span>status, <span class="fu">starts_with</span>(<span class="st">'property'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">starts_with</span>(<span class="st">'property'</span>), <span class="at">names_to =</span> <span class="st">'propertyname'</span>, <span class="at">values_to =</span> <span class="st">'property'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+New names:
+New names:
+New names:
+New names:
+New names:
+• `property` -&gt; `property...7`
+• `property` -&gt; `property...8`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dc0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 7
+   namespace  name       code       id         status propertyname  property    
+   &lt;list&gt;     &lt;list&gt;     &lt;list&gt;     &lt;list&gt;     &lt;list&gt; &lt;chr&gt;         &lt;list&gt;      
+ 1 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...7  &lt;named list&gt;
+ 2 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...8  &lt;named list&gt;
+ 3 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...10 &lt;NULL&gt;      
+ 4 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...11 &lt;NULL&gt;      
+ 5 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...7  &lt;named list&gt;
+ 6 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...8  &lt;named list&gt;
+ 7 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...10 &lt;NULL&gt;      
+ 8 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...11 &lt;NULL&gt;      
+ 9 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...7  &lt;named list&gt;
+10 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...8  &lt;named list&gt;
+# … with 14 more rows</code></pre>
+</div>
+</div>
+<p>After selecting the necessary columns and the ones starting with ‘property’, we pivot longer and the result of that is below :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a> dc0<span class="ot">&lt;-</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  dconcept[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_list</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">c =</span> .) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(<span class="at">col=</span>c) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(namespace<span class="sc">:</span>status, <span class="fu">starts_with</span>(<span class="st">'property'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">starts_with</span>(<span class="st">'property'</span>), <span class="at">names_to =</span> <span class="st">'propertyname'</span>, <span class="at">values_to =</span> <span class="st">'property'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+New names:
+New names:
+New names:
+• `property` -&gt; `property...7`
+• `property` -&gt; `property...8`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dc0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 7
+  namespace  name       code       id         status propertyname property    
+  &lt;list&gt;     &lt;list&gt;     &lt;list&gt;     &lt;list&gt;     &lt;list&gt; &lt;chr&gt;        &lt;list&gt;      
+1 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...7 &lt;named list&gt;
+2 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...8 &lt;named list&gt;
+3 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...7 &lt;named list&gt;
+4 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...8 &lt;named list&gt;
+5 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...7 &lt;named list&gt;
+6 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...8 &lt;named list&gt;
+7 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...7 &lt;named list&gt;
+8 &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list [1]&gt; &lt;list&gt; property...8 &lt;named list&gt;</code></pre>
+</div>
+</div>
+<p>In the below document, we unnest the columns that start with ‘property..’ again, in order to see what exactly are in those columns :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dc1<span class="ot">&lt;-</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  dc0 <span class="sc">%&gt;%</span> <span class="fu">unnest_longer</span>(<span class="at">col =</span> property) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>propertyname) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(property_id)) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> property_id, <span class="at">values_from =</span> property, <span class="at">names_prefix =</span> <span class="st">'property_'</span>)  <span class="sc">%&gt;%</span> </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">unnest_longer</span>(<span class="at">col =</span> <span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">ends_with</span>(<span class="st">'id'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="at">col =</span> <span class="fu">starts_with</span>(<span class="st">'property'</span>)  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="at">col =</span> <span class="fu">starts_with</span>(<span class="st">'property'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Values from `property` are not uniquely identified; output will contain list-cols.
+* Use `values_fn = list` to suppress this warning.
+* Use `values_fn = {summary_fun}` to summarise duplicates.
+* Use the following dplyr code to identify duplicates.
+  {data} %&gt;%
+    dplyr::group_by(namespace, name, code, id, status, property_id) %&gt;%
+    dplyr::summarise(n = dplyr::n(), .groups = "drop") %&gt;%
+    dplyr::filter(n &gt; 1L)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dc1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 7
+  namespace name      code  status property_content property_name property_value
+  &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;         &lt;chr&gt;         
+1 MED-RT    1-Compar… C298  ACTIVE MED-RT           CTY           PK            
+2 MED-RT    1-Compar… C298  ACTIVE MED-RT           NUI           N0000000060   
+3 MED-RT    14-alpha… C300… ACTIVE MED-RT           CTY           MoA           
+4 MED-RT    14-alpha… C300… ACTIVE MED-RT           NUI           N0000020025   
+5 MED-RT    2-Compar… C300  ACTIVE MED-RT           CTY           PK            
+6 MED-RT    2-Compar… C300  ACTIVE MED-RT           NUI           N0000000061   
+7 MED-RT    3-Compar… C302  ACTIVE MED-RT           CTY           PK            
+8 MED-RT    3-Compar… C302  ACTIVE MED-RT           NUI           N0000000062   </code></pre>
+</div>
+</div>
+<p>In the above output, we observe a pattern which is, CTY and NUI keep repeating in property name with their corresponding values in the property_value row. So now, we can just pivot wider ‘property_name’ with values from ‘property_value’ (meaning that CTY and NUI will be the new columns replacing the original column they are from - property_name, and the values that these two columns will have will be taken from the column ‘property value’).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>dc2 <span class="ot">&lt;-</span>  </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  dc1 <span class="sc">%&gt;%</span> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> property_name, <span class="at">values_from =</span> property_value)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>dc2 <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 7
+  namespace name                       code  status property_content CTY   NUI  
+  &lt;chr&gt;     &lt;chr&gt;                      &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt;
+1 MED-RT    1-Compartment [PK]         C298  ACTIVE MED-RT           PK    N000…
+2 MED-RT    14-alpha Demethylase Inhi… C300… ACTIVE MED-RT           MoA   N000…
+3 MED-RT    2-Compartment [PK]         C300  ACTIVE MED-RT           PK    N000…
+4 MED-RT    3-Compartment [PK]         C302  ACTIVE MED-RT           PK    N000…</code></pre>
+</div>
+</div>
+<p>Now that we have completely converted the &lt;property&gt; tag from concept into a complete table, we go ahead and save this table as a csv file which is what we’ve done below :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>dc2 <span class="sc">%&gt;%</span> data.table<span class="sc">::</span><span class="fu">fwrite</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">'data'</span>,<span class="st">'dts_concept_properties.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>dc2 <span class="ot">&lt;-</span>  data.table<span class="sc">::</span><span class="fu">fread</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">'data'</span>,<span class="st">'dts_concept_properties.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>dc2 <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   namespace                                  name    code status
+1:    MED-RT                    1-Compartment [PK]    C298 ACTIVE
+2:    MED-RT 14-alpha Demethylase Inhibitors [MoA] C300411 ACTIVE
+3:    MED-RT                    2-Compartment [PK]    C300 ACTIVE
+4:    MED-RT                    3-Compartment [PK]    C302 ACTIVE
+   property_content CTY         NUI
+1:           MED-RT  PK N0000000060
+2:           MED-RT MoA N0000020025
+3:           MED-RT  PK N0000000061
+4:           MED-RT  PK N0000000062</code></pre>
+</div>
+</div>
+<p>This is a snippet of the manipulation that is done on a ‘part’ of the dataset (remember ‘dconcept[1:4]’ that takes into consideration the first four tags instead of ‘dconcept’ which would have taken the entire data-set into consideration.</p>
+<div class="cell">
+
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

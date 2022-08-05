@@ -9,9 +9,12 @@ website:
         text: Home
       - href: about.qmd
         text: about
+      - href: Documentation.qmd
+        text: Parsing XML file
+      - href: Documentation2.qmd
+        text: Working with drugs data and patient data
       - href: Documentation3.qmd
-        text: Parse XML
-
+        text: List of all the xml-to-CSV files
 format:
   html:
     theme: cosmo

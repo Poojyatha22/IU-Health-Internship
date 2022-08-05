@@ -1,0 +1,142 @@
+---
+title: "IU Health Internship"
+author: "Poojyatha Venkatesh"
+format: html
+editor: visual
+---
+
+RxNorm is a normalised naming system for drugs. Medical data that was unstructured was downloaded. It was in an XML format that was highly complex. The first task was to flatten these xml tags. What was challenging was that these XML documents did not have the same children tags. Even the children tags did not have a structure that was similar to eachother. Every child tag was different and the same children tags had different structures.
+
+```{r setup}
+ pacman::p_load(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)
+```
+
+We load the xml document here :
+
+```{r}
+d <- xml2::read_xml(here::here("inst/Core_MEDRT_DTS/Core_MEDRT_20220705_DTS.xml"))
+```
+
+Out of the entire XML document, we are particularly focused on the \<concept\> tag :
+
+```{r}
+dconcept <-  xml_find_all(d, 'concept')  
+```
+
+Let's see a code snippet of the tag (one of the concept tags):
+
+```{r}
+
+htmltidy::xml_view(dconcept[1])
+```
+
+Let us look at another concept tag :
+
+```{r}
+htmltidy::xml_view(dconcept[9])
+```
+
+In the above code snippet, you will notice that the children tags of concept\[9\] is different from concept\[1\]. So how do we convert this concept tag into one table when children tags are different? This would be hard to accomplish since we would aim to make each of these sub tags as unique columns in the concept table. Therefore, it is better to make each of these children tags as unique tables while retaining the cother common children tags of concept.
+
+```{r}
+
+d1 <- 
+    dconcept[1:6] %>% 
+    as_list() %>% 
+    tibble (c= .)
+
+d1 
+```
+
+Now let us unnest_wider this further to see how it opens out :
+
+```{r}
+
+d2 <- 
+  d1 |> 
+  unnest_wider(col=everything())
+
+d2 %>% head()
+```
+
+We see that this concept tag has both concept as well as synonym. But we are particularly interested in the \<property\> sub tag. So
+
+```{r,}
+#|message: false
+#|warning: false
+ dc0<-
+  
+  dconcept[1:6] %>%
+  as_list() %>%
+  tibble(c = .) %>% 
+  unnest_wider(col=c) %>% 
+  select(namespace:status, starts_with('property')) %>% 
+  pivot_longer(starts_with('property'), names_to = 'propertyname', values_to = 'property') 
+
+dc0
+
+
+```
+
+After selecting the necessary columns and the ones starting with 'property', we pivot longer and the result of that is below :
+
+```{r}
+ dc0<-
+  
+  dconcept[1:4] %>% 
+  as_list() %>%
+  tibble(c = .) %>% 
+  unnest_wider(col=c) %>% 
+  select(namespace:status, starts_with('property')) %>% 
+  pivot_longer(starts_with('property'), names_to = 'propertyname', values_to = 'property') 
+
+dc0
+```
+
+In the below document, we unnest the columns that start with 'property..' again, in order to see what exactly are in those columns :
+
+```{r}
+dc1<-
+  
+  dc0 %>% unnest_longer(col = property) %>% 
+  
+  select(-propertyname) %>% 
+  filter(!is.na(property_id)) %>% 
+  pivot_wider(names_from = property_id, values_from = property, names_prefix = 'property_')  %>% 
+   unnest_longer(col = everything()) %>% 
+  select(-ends_with('id')) %>% 
+  unnest(col = starts_with('property')  ) %>% 
+  unnest(col = starts_with('property'))
+
+dc1
+```
+
+In the above output, we observe a pattern which is, CTY and NUI keep repeating in property name with their corresponding values in the property_value row. So now, we can just pivot wider 'property_name' with values from 'property_value' (meaning that CTY and NUI will be the new columns replacing the original column they are from - property_name, and the values that these two columns will have will be taken from the column 'property value').
+
+```{r}
+
+dc2 <-  
+  dc1 %>% pivot_wider(names_from = property_name, values_from = property_value)
+
+dc2 %>% head()
+```
+
+Now that we have completely converted the \<property\> tag from concept into a complete table, we go ahead and save this table as a csv file which is what we've done below :
+
+```{r}
+dc2 %>% data.table::fwrite(here::here('data','dts_concept_properties.csv'))
+```
+
+```{r}
+dc2 <-  data.table::fread(here::here('data','dts_concept_properties.csv'))
+```
+
+```{r}
+dc2 %>% head()
+```
+
+This is a snippet of the manipulation that is done on a 'part' of the dataset (remember 'dconcept\[1:4\]' that takes into consideration the first four tags instead of 'dconcept' which would have taken the entire data-set into consideration.
+
+```{r}
+
+```
