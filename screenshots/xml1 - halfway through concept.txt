@@ -1,0 +1,438 @@
+
+---
+title: "Parse Med Rd XML"
+author: "Poojyatha"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+Purpose
+
+:   Parse the XML table
+
+Tables
+
+-   namespace
+-   referencedNamespace
+-   proptype
+-   assntype
+-   qualtype
+-   term
+-   concept
+-   association
+
+## Load XML
+
+```{r setup}
+pacman::p_load(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)
+
+# install.packages('repurrrsive')
+
+# library(repurrrsive)
+```
+
+\
+
+```{r}
+d <- xml2::read_xml(here::here("inst/Core_MEDRT_XML/Core_MEDRT_2022.05.02_XML.xml"))
+```
+
+```{r}
+d
+```
+
+## Namespace
+
+```{r}
+namespace <- xml_find_all(d, 'namespace')
+namespace
+```
+
+```{r}
+ n <-  xml_find_all(d, 'namespace')  %>% 
+  as_list() %>% 
+  tibble(c = .) %>% 
+  unnest_wider(col = c) %>% 
+  janitor::clean_names()  %>%  
+  unnest_longer(col = everything())
+
+ n
+```
+
+## referencedNamespace
+
+```{r}
+referencedNamespace <- xml_find_all(d, 'referencedNamespace')
+```
+
+```{r}
+referencedNamespace  %>% htmltidy::html_view()
+```
+
+```{r}
+ r <-  referencedNamespace %>% 
+  as_list() %>% tibble(c = .) %>% 
+  unnest_wider(col = c) %>% 
+  janitor::clean_names()  %>% 
+  unnest_longer(col = everything())
+
+r
+```
+
+## proptype
+
+```{r}
+proptype <- xml_find_all(d, 'proptype')
+```
+
+```{r}
+proptype %>% htmltidy::xml_view()
+```
+
+```{r}
+p <- proptype %>% 
+  as_list() %>% 
+  tibble(c = .) %>% 
+  unnest_wider(col = c) %>% 
+  janitor::clean_names()  %>%  
+  unnest_longer(col = everything())
+
+p
+```
+
+## qualtype
+
+```{r}
+qualtype <-  xml_find_all(d, 'qualtype')  %>% as_list() %>% tibble(c = .) %>% unnest_wider(col = c) %>% janitor::clean_names() 
+ qualtype
+```
+
+```{r}
+q <-  qualtype %>% 
+  unnest_longer(col = everything())
+
+q
+```
+
+## term
+
+```{r}
+term <- xml_find_all(d, 'term')
+term 
+```
+
+```{r}
+term[1:3] %>% htmltidy::xml_view()
+```
+
+```{r}
+ t <-  xml_find_all(d, 'term')  %>% as_list() %>% tibble(c = .) %>% unnest_wider(col = c) %>% janitor::clean_names() 
+ t
+```
+
+```{r}
+t <-  term %>% 
+  as_list() %>% 
+  tibble(c1 = .) %>% 
+  unnest_wider(col = c1) %>% 
+  janitor::clean_names()  %>% 
+  unnest_longer(col = everything())
+
+t
+
+```
+
+## assntype
+
+```{r}
+assntype <- xml_find_all(d, 'assntype')
+```
+
+```{r}
+assntype %>% htmltidy::xml_view()
+```
+
+
+```{r}
+A0 <-  assntype  %>% as_list() %>% tibble(c = .) %>% unnest_wider(col = c) %>% janitor::clean_names() 
+A0
+```
+
+```{r}
+A1<- A0 %>% unnest_longer(col = everything())
+A1
+```
+
+## association
+
+```{r}
+assn <-  xml_find_all(d, 'association')  
+assn
+```
+
+
+```{r}
+assn[1:10] %>% htmltidy::xml_view()
+```
+
+```{r}
+a0<- assn[1:1000] %>% as_list() %>% tibble(c = .)
+a0 %>% 
+  rowwise() %>% 
+  mutate(lengthc = length(c)) %>%
+  ungroup() %>% 
+  filter(lengthc != 9) %>% 
+  select(-lengthc) %>% 
+  slice(1) %>% 
+  unnest_wider(col = c) %>% 
+  janitor::clean_names()  
+  head(11)
+  
+```
+```{r}
+a0<- assn[1:1000] %>% as_list() %>% tibble(c = .)
+a0 %>% 
+  rowwise() %>% 
+  mutate(lengthc = length(c)) %>%
+  ungroup() %>% 
+  filter(lengthc != 9) %>% 
+  select(-lengthc) %>% 
+  slice(1) %>% 
+  unnest_wider(col = c) %>% 
+  janitor::clean_names()  %>% 
+  select(-qualifier_10) %>% 
+  rename(qualifier = qualifier_9) %>% 
+   unnest_longer(col = qualifier) %>% 
+  head(11)
+  
+```
+
+
+
+
+```{r}
+a0<- assn[1:10000] %>% as_list() %>% tibble(c = .)
+a0 %>% 
+  rowwise() %>% 
+  #mutate(lengthc = length(c)) %>%
+  ungroup() %>% 
+  #filter(lengthc != 9) %>% 
+  #select(-lengthc) %>% 
+  #slice(1) %>% 
+  unnest_wider(col = c) %>% 
+  janitor::clean_names()  %>%
+  pivot_longer(starts_with('qualifier'), names_to = 'qualifiername', values_to = 'qualifier') %>% 
+  
+   unnest_longer(col = qualifier) %>% 
+  
+  rename(namespacetop = namespace,
+         nametop = name) %>% 
+  filter(!is.na(qualifier_id)) %>% 
+  pivot_wider(names_from = qualifier_id, values_from = qualifier, names_prefix = 'qualifier_') %>% 
+  select(-qualifiername) %>% 
+  
+  unnest(col = everything()) %>% 
+  unnest(col = everything()) %>% 
+  head(11)
+
+```
+
+
+```{r}
+a0<- assn %>% as_list() %>% tibble(c = .)
+a1<-a0 %>% 
+  rowwise() %>% 
+  #mutate(lengthc = length(c)) %>%
+  ungroup() %>% 
+  #filter(lengthc != 9) %>% 
+  #select(-lengthc) %>% 
+  #slice(1) %>% 
+  unnest_wider(col = c) %>% 
+  janitor::clean_names()  %>%
+  pivot_longer(starts_with('qualifier'), names_to = 'qualifiername', values_to = 'qualifier') %>% 
+  
+   unnest_longer(col = qualifier) %>% 
+  
+  rename(namespacetop = namespace,
+         nametop = name) %>% 
+  filter(!is.na(qualifier_id)) %>% 
+  pivot_wider(names_from = qualifier_id, values_from = qualifier, names_prefix = 'qualifier_') %>% 
+  select(-qualifiername) %>% 
+  
+  unnest(col = everything()) %>% 
+  unnest(col = everything())
+
+```
+```{r}
+a1
+```
+## concept
+
+```{r}
+concept <-  xml_find_all(d, 'concept')  
+concept
+```
+```{r}
+
+concept[1:10] %>% htmltidy::xml_view()
+```
+
+
+```{r}
+concept[1:20] %>%
+  as_list() %>% 
+  purrr::map_df(~ tibble(., c = .)
+                %>% unnest_wider( col = c) %>% 
+                  janitor::clean_names()  )  %>% 
+  unnest(x) %>% 
+  unnest(namespace:preferred) %>% 
+  unnest(namespace:preferred) %>% 
+  filter(!is.na(preferred)) %>% 
+  head()
+```
+
+
+```{r}
+concept[1:20] %>%
+  as_list() %>% 
+  purrr::map_df(~ tibble(., c = .)
+                %>% unnest_wider( col = c) %>% 
+                  janitor::clean_names()  )  %>% 
+  unnest(x) %>% 
+  select(-preferred) %>% 
+  head(100)
+```
+
+```{r}
+c0<- concept[1:100] %>% as_list() %>% tibble(c = .) 
+c0 %>% head()
+```
+
+```{r}
+c0 %>%  rowwise() %>% 
+  mutate(lengthc = length(c)) %>%
+  ungroup() %>% 
+  arrange(desc(lengthc))
+ 
+```
+
+
+```{r}
+c <-  c0 %>% 
+  rowwise() %>% 
+  map_df(unnest_wider, col = c)
+  unnest_wider(col = c) %>% 
+  janitor::clean_names()  
+  #unnest_longer(col = everything())
+
+c
+```
+
+```{r}
+c2<- c1 %>% 
+  select(namespace:status, starts_with('property')) %>%
+  pivot_longer(starts_with('property'), names_to = 'propertyname', values_to = 'property') 
+  
+```
+
+```{r}
+c3 <-  c2 %>%  unnest_longer(col = property) %>% 
+  
+  select(-propertyname) %>% 
+  filter(!is.na(property_id)) %>% 
+  pivot_wider(names_from = property_id, values_from = property, names_prefix = 'property_')  %>% 
+   unnest_longer(col = everything()) %>% 
+  select(-ends_with('id')) %>% 
+  unnest(col = starts_with('property')  ) %>% 
+  unnest(col = starts_with('property'))
+
+c3
+```
+
+```{r}
+c3 %>% data.table::fwrite(here::here('data','concept_properties.csv'))
+```
+
+
+```{r}
+c3<- concept %>% 
+  as_list() %>% 
+  tibble(c1 = .) %>% 
+  unnest_wider(col = c1) %>% 
+  janitor::clean_names()  
+  #unnest_longer(col = everything())
+
+c3
+```
+
+```{r}
+a0<- assn[1:1000] %>% as_list() %>% tibble(c = .)
+a0 %>% 
+  rowwise() %>% 
+  mutate(lengthc = length(c)) %>%
+  ungroup() %>% 
+  filter(lengthc != 9) %>% 
+  select(-lengthc) %>% 
+  slice(1) %>% 
+  unnest_wider(col = c) %>% 
+  janitor::clean_names()  
+  head(11)
+```
+
+## over 
+
+```{r}
+a0<- assn[1:1000] %>% as_list() %>% tibble(c = .) %>% unnest_wider(col = c) %>% janitor::clean_names() 
+a0 %>% head()
+```
+
+```{r}
+assn1<-a0 %>% unnest_longer(col = qualifier)
+assn1 %>% head()
+```
+
+```{r}
+assn1 %>% 
+  rename(namespacetop = namespace,
+         nametop = name) %>% 
+  pivot_wider(names_from = qualifier_id, values_from = qualifier) %>% 
+  unnest(col=everything()) %>% 
+  unnest(col=everything()) %>% 
+  head()
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+assn2<-assn1 %>% unnest_longer(col = qualifier)
+assn2
+```
+
+```{r}
+assn3<-assn2 %>% unnest_longer(col = qualifier_9)
+assn3
+```
+
+```{r}
+assn4<-assn3 %>% unnest_longer(col = qualifier_10)
+assn4
+```
+
+```{r}
+assn5<-assn4 %>% unnest_longer(col = qualifier_11)
+assn5
+```
+
+```{r}
+assn5 %>% 
+  filter(!is.na(qualifier_9))
+```
+
+```{r}
+assn5 %>% 
+  filter(!is.na(qualifier_11))
+```

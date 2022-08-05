@@ -10,10 +10,6 @@ date: '2022-06-21'
 pacman::p_load(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)
 ```
 
-# Concept
-
-## Concept properties
-
 ```{r}
 d <- xml2::read_xml(here::here("inst/Core_MEDRT_XML/Core_MEDRT_20220502_DTS.xml"))
 d %>% head()
@@ -24,74 +20,49 @@ dconcept <-  xml_find_all(d, 'concept')
 
 dconcept %>% head()
 ```
+
 ```{r}
 htmltidy::xml_view(dconcept[1])
 ```
 
+```{r}
+
+htmltidy::xml_view(dconcept[9])
+```
 
 ```{r}
 d1 <- 
-    dconcept %>% 
+    dconcept[1:4] %>% 
     as_list() %>% 
     tibble (c= .)
 
 d1 %>% head()
 ```
 
-
 ```{r}
-d1[1]
-
-```
-
-```{r}
-
 
 d2 <- 
-  d1[1] %>%
+  d1 %>%
   unnest_wider(col=c)
 
 d1 %>% head()
 ```
 
 ```{r}
-
-d2 <- d1 %>% unnest_wider(col=everything)
-d2 %>% head()
-```
-
-
-```{r}
- dc0<-
-  
-  dconcept %>%
+dc0<-
+  dconcept[1:4] %>%
   as_list() %>%
   tibble(c = .) %>% 
-  unnest_wider(col=c) %>% 
-  select(namespace:status, starts_with('property')) %>% 
-  pivot_longer(starts_with('property'), names_to = 'propertyname', values_to = 'property') 
-
-dc0
-
-```
-
-```{r}
-dc0 <- 
-  dc0 %>% unnest_wider(col=everything())
+  unnest_wider(col=c)
 
 dc0 %>% head()
+
 ```
-
-
-
-
-
-
 
 ```{r}
  dc0<-
   
-  dconcept %>%
+  dconcept[1:4] %>%
   as_list() %>%
   tibble(c = .) %>% 
   unnest_wider(col=c) %>% 
@@ -117,14 +88,6 @@ dc1<-
 dc1
 ```
 
-
-
-
-
-
-
-
-
 ```{r}
 
 dc2 <-  
@@ -132,6 +95,7 @@ dc2 <-
 
 dc2 %>% head()
 ```
+
 ```{r}
 dc2 %>% data.table::fwrite(here::here('data','dts_concept_properties.csv'))
 ```
@@ -143,7 +107,6 @@ dc2 <-  data.table::fread(here::here('data','dts_concept_properties.csv'))
 ```{r}
 dc1 %>% head()
 ```
-
 
 ## Concept synonym
 
