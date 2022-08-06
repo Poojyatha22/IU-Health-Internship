@@ -1,6 +1,6 @@
 ---
 title: "Summary of the IU Health DS Internship"
-author: "Harlan A. Nelson, Poojyatha Venkatesh"
+author: "Harlan A Nelson,Poojyatha Venkatesh"
 format: revealjs
 editor: visual
 ---
@@ -9,11 +9,11 @@ editor: visual
 
 One of the main objectives of this Internship was to form a great understanding of medicinal drugs, their hierarchy, their nomenclature etc so that we can easily understand their relationship with diseases and patients which will help us in forming patient cohorts or cohorts for drugs
 
-## More on hierarchy and the objective :
+## More on hierarchy and the objective 
 
 RxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call 'Concept'.Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY's are Mechanism of Action \[MoA\], Pharmokinetics \[PK\]. Through such an understanding, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of another to treat a disease etc.
 
-## An example of diseases that a drug is used in the treatment of:
+## An example of diseases that a drug is used in the treatment of
 
 In the below picture, we can see that a drug called 'atenolol' is used in the treatment of various diseases that are in the different branches - 'Sick Synus Syndrome' , 'Bradycardia' , 'Myocardial Infarction' , 'Arrhythmia, Sinus' , 'Ventricular Fibrillation' and 'Shock, Cardiogenic'.
 
