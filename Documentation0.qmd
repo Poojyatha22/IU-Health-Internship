@@ -1,6 +1,6 @@
 ---
 title: "Summary of the IU Health DS Internship"
-author: "Harlan A Nelson, Poojyatha Venkatesh"
+author: "Harlan A. Nelson, Poojyatha Venkatesh"
 format: revealjs
 editor: visual
 ---
