@@ -9,7 +9,7 @@
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-0.9.592">
 
-  <meta name="author" content="Harlan A Nelson, Poojyatha Venkatesh">
+  <meta name="author" content="Harlan A Nelson,Poojyatha Venkatesh">
   <title>Case Study parsing XML with R - Summary of the IU Health DS Internship</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -320,44 +320,54 @@
 
 <section id="title-slide" class="center">
   <h1 class="title">Summary of the IU Health DS Internship</h1>
-  <p class="author">Harlan A Nelson, Poojyatha Venkatesh</p>
+  <p class="author">Harlan A Nelson,Poojyatha Venkatesh</p>
 </section>
 
 <section id="purpose-of-this-internship" class="slide level2">
 <h2>Purpose of this Internship</h2>
-<p>Note : this is a presentation, so please swipe left if you are viewieng through a phone or hit pageup/pagedown if you’re using a PC</p>
-<p>One of the main objectives of this Internship was to form a great understanding of medicinal drugs, their hierarchy, their nomenclature etc so that we are easily understand their relationship with diseases and patients which will help us in forming patient cohorts or cohorts for drugs</p>
-<p>RxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call ‘Concept’.</p>
-<p>A Concept-type is like a way to group drugs. Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY’s are Mechanism of Action [MoA], Pharmokinetics [PK]. These can be used to describe drugs</p>
-<p>When we have an understanding of drugs through such concepts, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of other to treat a disease etc.</p>
+<p>One of the main objectives of this Internship was to form a great understanding of medicinal drugs, their hierarchy, their nomenclature etc so that we can easily understand their relationship with diseases and patients which will help us in forming patient cohorts or cohorts for drugs</p>
 </section>
-<section id="an-example-of-diseases-that-a-drug-treats" class="slide level2">
-<h2>An example of diseases that a drug treats</h2>
-<p>In the below picture, we can see that a drug calles ‘atenolol’ is used in the treatment of various diseases that are in the different branches - ‘Sick Synus Syndrome’ , ‘Bradycardia’ , ‘Myocardial Infarction’ , ‘Arrhythmia, Sinus’ , ‘Ventricular Fibrillation’ and ‘Shock, Cardiogenic’.</p>
+<section id="more-on-hierarchy-and-the-objective" class="slide level2">
+<h2>More on hierarchy and the objective</h2>
+<p>RxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call ‘Concept’.Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY’s are Mechanism of Action [MoA], Pharmokinetics [PK]. Through such an understanding, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of another to treat a disease etc.</p>
+</section>
+<section id="an-example-of-diseases-that-a-drug-is-used-in-the-treatment-of" class="slide level2">
+<h2>An example of diseases that a drug is used in the treatment of</h2>
+<p>In the below picture, we can see that a drug called ‘atenolol’ is used in the treatment of various diseases that are in the different branches - ‘Sick Synus Syndrome’ , ‘Bradycardia’ , ‘Myocardial Infarction’ , ‘Arrhythmia, Sinus’ , ‘Ventricular Fibrillation’ and ‘Shock, Cardiogenic’.</p>
 
 <img data-src="screenshots/atenolol.png" style="width:50.0%" class="r-stretch"></section>
-<section id="below-we-are-comparing-two-drugs-atenolol-and-bisoprol" class="slide level2">
-<h2>Below, we are comparing two drugs : ‘atenolol’ and ‘bisoprol’</h2>
-<p>We can see the hierarchy of the two drugs below. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical [ATC], which further narrows down to the description of Cardiovascular system, Beta Blocking Agents and many more :</p>
+<section id="comparing-two-drugs" class="slide level2">
+<h2>Comparing two drugs</h2>
+<p>We are going to see the hierarchy of two drugs in the next slide. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical [ATC]which has a further sub division called Cardiovascular system adn then a narrower division called Beta Blocking Agents and so on.</p>
+</section>
+<section id="atenolol" class="slide level2">
+<h2>Atenolol</h2>
 <div class="cell">
 <div class="cell-output-display">
-<p><img data-src="screenshots/atenololhierarchy.png" style="width:5.0%"></p>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<p><img data-src="screenshots/bisoprolpath.png" style="width:10.0%"></p>
+<p><img data-src="screenshots/atenololhierarchy.png" style="width:50.0%;height:75.0%"></p>
 </div>
 </div>
 </section>
-<section id="more-about-the-my-team" class="slide level2">
-<h2>More about the my team:</h2>
-<p>Clinical Research Department at IU Health :</p>
+<section id="bisoprol" class="slide level2">
+<h2>Bisoprol</h2>
+<div class="cell">
+<div class="cell-output-display">
+<p><img data-src="screenshots/bisoprolpath.png" style="width:40.0%;height:15.0%"></p>
+</div>
+</div>
+</section>
+<section id="more-about-the-my-team---clinical-research-department-at-iu-health" class="slide level2">
+<h2>More about the my team - Clinical Research Department at IU Health</h2>
 <p>Operation of Clinical Trials in Cerner (managing Protocol and Subject information, building Pre-screening to identify trial candidates, building Order sets for research protocols)</p>
 <p>Feasibility evaluation, identification of patient cohorts for both retrospective and prospective clinical research, data extraction and analysis as well as development of ML models for research</p>
 <p>Design and development of Cohort identification and analysis tool</p>
-<p>I am grateful to have gotten inputs from Dr.&nbsp;Saravanan Kanakasabai, Mr.&nbsp;Gregory Klopper and Mr.&nbsp;Rick Tuason and ofcourse my Supervisor Mr.&nbsp;Harlan A Nelson from the Clinical Research Department.</p>
-<p>How did this project make a difference to the Health care system at IU Health?</p>
+</section>
+<section id="the-people" class="slide level2">
+<h2>The people</h2>
+<p>I am grateful to have gotten inputs from Dr.&nbsp;Saravanan Kanakasabai, Mr.&nbsp;Gregory Klopper and Mr.&nbsp;Rick Tuason and of course my Supervisor Mr.&nbsp;Harlan A Nelson from the Clinical Research Department.</p>
+</section>
+<section id="how-did-this-project-make-a-difference-to-the-health-care-system-at-iu-health" class="slide level2">
+<h2>How did this project make a difference to the health care system at IU Health?</h2>
 <p>Instead of associating drugs with diseases, we delve deeper and make searches more complex through including more facets into hierarchy like pharmacological class, concept types, etc. Correlation of drug regimens to diseases and health outcomes.</p>
 </section>
 <section id="future-work" class="slide level2">

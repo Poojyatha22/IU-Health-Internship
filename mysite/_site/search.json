@@ -18,28 +18,63 @@
     "href": "Documentation0.html#purpose-of-this-internship",
     "title": "Summary of the IU Health DS Internship",
     "section": "Purpose of this Internship",
-    "text": "Purpose of this Internship\nNote : this is a presentation, so please swipe left if you are viewieng through a phone or hit pageup/pagedown if you’re using a PC\nOne of the main objectives of this Internship was to form a great understanding of medicinal drugs, their hierarchy, their nomenclature etc so that we are easily understand their relationship with diseases and patients which will help us in forming patient cohorts or cohorts for drugs\nRxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call ‘Concept’.\nA Concept-type is like a way to group drugs. Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY’s are Mechanism of Action [MoA], Pharmokinetics [PK]. These can be used to describe drugs\nWhen we have an understanding of drugs through such concepts, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of other to treat a disease etc."
+    "text": "Purpose of this Internship\nOne of the main objectives of this Internship was to form a great understanding of medicinal drugs, their hierarchy, their nomenclature etc so that we can easily understand their relationship with diseases and patients which will help us in forming patient cohorts or cohorts for drugs"
   },
   {
-    "objectID": "Documentation0.html#an-example-of-diseases-that-a-drug-treats",
-    "href": "Documentation0.html#an-example-of-diseases-that-a-drug-treats",
+    "objectID": "Documentation0.html#more-on-hierarchy-and-the-objective",
+    "href": "Documentation0.html#more-on-hierarchy-and-the-objective",
     "title": "Summary of the IU Health DS Internship",
-    "section": "An example of diseases that a drug treats",
-    "text": "An example of diseases that a drug treats\nIn the below picture, we can see that a drug calles ‘atenolol’ is used in the treatment of various diseases that are in the different branches - ‘Sick Synus Syndrome’ , ‘Bradycardia’ , ‘Myocardial Infarction’ , ‘Arrhythmia, Sinus’ , ‘Ventricular Fibrillation’ and ‘Shock, Cardiogenic’."
+    "section": "More on hierarchy and the objective",
+    "text": "More on hierarchy and the objective\nRxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call ‘Concept’.Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY’s are Mechanism of Action [MoA], Pharmokinetics [PK]. Through such an understanding, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of another to treat a disease etc."
   },
   {
-    "objectID": "Documentation0.html#below-we-are-comparing-two-drugs-atenolol-and-bisoprol",
-    "href": "Documentation0.html#below-we-are-comparing-two-drugs-atenolol-and-bisoprol",
+    "objectID": "Documentation0.html#an-example-of-diseases-that-a-drug-is-used-in-the-treatment-of",
+    "href": "Documentation0.html#an-example-of-diseases-that-a-drug-is-used-in-the-treatment-of",
     "title": "Summary of the IU Health DS Internship",
-    "section": "Below, we are comparing two drugs : ‘atenolol’ and ‘bisoprol’",
-    "text": "Below, we are comparing two drugs : ‘atenolol’ and ‘bisoprol’\nWe can see the hierarchy of the two drugs below. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical [ATC], which further narrows down to the description of Cardiovascular system, Beta Blocking Agents and many more :"
+    "section": "An example of diseases that a drug is used in the treatment of",
+    "text": "An example of diseases that a drug is used in the treatment of\nIn the below picture, we can see that a drug called ‘atenolol’ is used in the treatment of various diseases that are in the different branches - ‘Sick Synus Syndrome’ , ‘Bradycardia’ , ‘Myocardial Infarction’ , ‘Arrhythmia, Sinus’ , ‘Ventricular Fibrillation’ and ‘Shock, Cardiogenic’."
   },
   {
-    "objectID": "Documentation0.html#more-about-the-my-team",
-    "href": "Documentation0.html#more-about-the-my-team",
+    "objectID": "Documentation0.html#comparing-two-drugs",
+    "href": "Documentation0.html#comparing-two-drugs",
     "title": "Summary of the IU Health DS Internship",
-    "section": "More about the my team:",
-    "text": "More about the my team:\nClinical Research Department at IU Health :\nOperation of Clinical Trials in Cerner (managing Protocol and Subject information, building Pre-screening to identify trial candidates, building Order sets for research protocols)\nFeasibility evaluation, identification of patient cohorts for both retrospective and prospective clinical research, data extraction and analysis as well as development of ML models for research\nDesign and development of Cohort identification and analysis tool\nI am grateful to have gotten inputs from Dr. Saravanan Kanakasabai, Mr. Gregory Klopper and Mr. Rick Tuason and ofcourse my Supervisor Mr. Harlan A Nelson from the Clinical Research Department.\nHow did this project make a difference to the Health care system at IU Health?\nInstead of associating drugs with diseases, we delve deeper and make searches more complex through including more facets into hierarchy like pharmacological class, concept types, etc. Correlation of drug regimens to diseases and health outcomes."
+    "section": "Comparing two drugs",
+    "text": "Comparing two drugs\nWe are going to see the hierarchy of two drugs in the next slide. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical [ATC]which has a further sub division called Cardiovascular system adn then a narrower division called Beta Blocking Agents and so on."
+  },
+  {
+    "objectID": "Documentation0.html#atenolol",
+    "href": "Documentation0.html#atenolol",
+    "title": "Summary of the IU Health DS Internship",
+    "section": "Atenolol",
+    "text": "Atenolol"
+  },
+  {
+    "objectID": "Documentation0.html#bisoprol",
+    "href": "Documentation0.html#bisoprol",
+    "title": "Summary of the IU Health DS Internship",
+    "section": "Bisoprol",
+    "text": "Bisoprol"
+  },
+  {
+    "objectID": "Documentation0.html#more-about-the-my-team---clinical-research-department-at-iu-health",
+    "href": "Documentation0.html#more-about-the-my-team---clinical-research-department-at-iu-health",
+    "title": "Summary of the IU Health DS Internship",
+    "section": "More about the my team - Clinical Research Department at IU Health",
+    "text": "More about the my team - Clinical Research Department at IU Health\nOperation of Clinical Trials in Cerner (managing Protocol and Subject information, building Pre-screening to identify trial candidates, building Order sets for research protocols)\nFeasibility evaluation, identification of patient cohorts for both retrospective and prospective clinical research, data extraction and analysis as well as development of ML models for research\nDesign and development of Cohort identification and analysis tool"
+  },
+  {
+    "objectID": "Documentation0.html#the-people",
+    "href": "Documentation0.html#the-people",
+    "title": "Summary of the IU Health DS Internship",
+    "section": "The people",
+    "text": "The people\nI am grateful to have gotten inputs from Dr. Saravanan Kanakasabai, Mr. Gregory Klopper and Mr. Rick Tuason and of course my Supervisor Mr. Harlan A Nelson from the Clinical Research Department."
+  },
+  {
+    "objectID": "Documentation0.html#how-did-this-project-make-a-difference-to-the-health-care-system-at-iu-health",
+    "href": "Documentation0.html#how-did-this-project-make-a-difference-to-the-health-care-system-at-iu-health",
+    "title": "Summary of the IU Health DS Internship",
+    "section": "How did this project make a difference to the health care system at IU Health?",
+    "text": "How did this project make a difference to the health care system at IU Health?\nInstead of associating drugs with diseases, we delve deeper and make searches more complex through including more facets into hierarchy like pharmacological class, concept types, etc. Correlation of drug regimens to diseases and health outcomes."
   },
   {
     "objectID": "Documentation0.html#future-work",
