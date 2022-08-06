@@ -9,8 +9,6 @@ editor: visual
 
 Now that we have seen how a complex xml document can be converted into a csv files, the next step we do is that we try to upload these files to the Microsoft SQL Server.
 
-\[For next slide, swipe left if you're vieweing through a mobile phone, if you're using a PC, hit 'pageup/pagedown'\]
-
 ```{r echo=FALSE, out.width="50%"}
 
 knitr::include_graphics("screenshots/sqlserver.png", error=FALSE)
@@ -27,7 +25,7 @@ knitr::include_graphics("screenshots/Cerner.png", error=FALSE)
 
 The next step was to find out commonalities between this data (data that was already existing in the IU Health server) and the data on MSS (microsoft sql server , in other words, that data that we uploaded).
 
-Upon some exploration, I found that CatalogCVDisplayDSC column from the above screenshot and a column called from_name from one of the uplaoded tables called association were the same. So, we tried to create a crosswalk between the both. Below is the process of creating a crosswalk.
+Upon some exploration, I found that CatalogCVDisplayDSC column from the above screenshot and a column called from_name from one of the uploaded tables called association were the same. So, we tried to create a crosswalk between the both. Below is the process of creating a crosswalk.
 
 ## Merging data :
 

@@ -4,7 +4,7 @@
     "href": "about.html",
     "title": "Poojyatha Venkatesh",
     "section": "",
-    "text": "This is Poojyatha Venkatesh! I am passionate about Data Science and playing around with data transformation and manipulation.\nI recently graduated from Indiana University Purdue University, Indianapolis with a Master’s\ndegree in Applied Data Science (August’22). I got my Bachelors in Information Technology from College of Engineering - Guindy, Anna University.\nFun fact : I am the Graduate Ambassador for the School of Informatics and Computingat IUPUI ( Poojyatha Venkatesh – School of Informatics and Computing : IUPUI ) So if you do have any plans of joining IUPUI or queries about the MS in Applied Data Science program / admissions / campus life, you could just connect with me on LinkedIn ( https://www.linkedin.com/in/poojyatha-venkatesh-18a081227/ )"
+    "text": "This is Poojyatha Venkatesh! I am passionate about Data Science and playing around with data transformation and manipulation.\nI recently graduated from Indiana University Purdue University, Indianapolis with a Master’s degree in Applied Data Science (August’22). I got my Bachelors in Information Technology from College of Engineering - Guindy, Anna University.\nFun fact : I am the Graduate Ambassador for the School of Informatics and Computingat IUPUI ( Poojyatha Venkatesh – School of Informatics and Computing : IUPUI ) So if you do have any plans of joining IUPUI or queries about the MS in Applied Data Science program / admissions / campus life, you could just connect with me on LinkedIn ( https://www.linkedin.com/in/poojyatha-venkatesh-18a081227/ )"
   },
   {
     "objectID": "Documentation.html",
@@ -25,7 +25,7 @@
     "href": "Documentation0.html#more-on-hierarchy-and-the-objective",
     "title": "Summary of the IU Health DS Internship",
     "section": "More on hierarchy and the objective",
-    "text": "More on hierarchy and the objective\nRxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call ‘Concept’.Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY’s are Mechanism of Action [MoA], Pharmokinetics [PK]. Through such an understanding, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of another to treat a disease etc."
+    "text": "More on hierarchy and the objective\nRxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call ‘Concept’. Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY’s are Mechanism of Action [MoA], Pharmokinetics [PK]. Through such an understanding, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of another to treat a disease etc."
   },
   {
     "objectID": "Documentation0.html#an-example-of-diseases-that-a-drug-is-used-in-the-treatment-of",
@@ -39,7 +39,7 @@
     "href": "Documentation0.html#comparing-two-drugs",
     "title": "Summary of the IU Health DS Internship",
     "section": "Comparing two drugs",
-    "text": "Comparing two drugs\nWe are going to see the hierarchy of two drugs in the next slide. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical [ATC]which has a further sub division called Cardiovascular system adn then a narrower division called Beta Blocking Agents and so on."
+    "text": "Comparing two drugs\nWe are going to see the hierarchy of two drugs in the next slide. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical [ATC] which has a further sub division called Cardiovascular system and then a narrower division called Beta Blocking Agents and so on."
   },
   {
     "objectID": "Documentation0.html#atenolol",
@@ -67,7 +67,7 @@
     "href": "Documentation0.html#the-people",
     "title": "Summary of the IU Health DS Internship",
     "section": "The people",
-    "text": "The people\nI am grateful to have gotten inputs from Dr. Saravanan Kanakasabai, Mr. Gregory Klopper and Mr. Rick Tuason and of course my Supervisor Mr. Harlan A Nelson from the Clinical Research Department."
+    "text": "The people\nI am grateful to Dr. Saravanan Kanakasabai, Mr. Gregory Klopper and Mr. Rick Tuason and of course my Supervisor Mr. Harlan A Nelson from the Clinical Research Department for guiding me, providing valuable feedback, help understand medicinal terminologies, help us access patient related data from IU Health Server (Server Data Source Mart) and providing me with this wonderful Internship experience."
   },
   {
     "objectID": "Documentation0.html#how-did-this-project-make-a-difference-to-the-health-care-system-at-iu-health",
@@ -88,7 +88,7 @@
     "href": "Documentation2.html#microsoft-sql-server",
     "title": "IU Health Documentation part 2",
     "section": "MICROSOFT SQL SERVER",
-    "text": "MICROSOFT SQL SERVER\nNow that we have seen how a complex xml document can be converted into a csv files, the next step we do is that we try to upload these files to the Microsoft SQL Server.\n[For next slide, swipe left if you’re vieweing through a mobile phone, if you’re using a PC, hit ‘pageup/pagedown’]"
+    "text": "MICROSOFT SQL SERVER\nNow that we have seen how a complex xml document can be converted into a csv files, the next step we do is that we try to upload these files to the Microsoft SQL Server."
   },
   {
     "objectID": "Documentation2.html#access-data-related-to-patients-from-the-edw-cerner-data-source-mart-through-sql",
@@ -102,7 +102,7 @@
     "href": "Documentation2.html#finding-commonalities-between-patient-data-and-drug-data",
     "title": "IU Health Documentation part 2",
     "section": "Finding Commonalities between patient data and drug data",
-    "text": "Finding Commonalities between patient data and drug data\nThe next step was to find out commonalities between this data (data that was already existing in the IU Health server) and the data on MSS (microsoft sql server , in other words, that data that we uploaded).\nUpon some exploration, I found that CatalogCVDisplayDSC column from the above screenshot and a column called from_name from one of the uplaoded tables called association were the same. So, we tried to create a crosswalk between the both. Below is the process of creating a crosswalk."
+    "text": "Finding Commonalities between patient data and drug data\nThe next step was to find out commonalities between this data (data that was already existing in the IU Health server) and the data on MSS (microsoft sql server , in other words, that data that we uploaded).\nUpon some exploration, I found that CatalogCVDisplayDSC column from the above screenshot and a column called from_name from one of the uploaded tables called association were the same. So, we tried to create a crosswalk between the both. Below is the process of creating a crosswalk."
   },
   {
     "objectID": "Documentation2.html#merging-data",

@@ -11,7 +11,7 @@ One of the main objectives of this Internship was to form a great understanding 
 
 ## More on hierarchy and the objective
 
-RxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call 'Concept'.Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY's are Mechanism of Action \[MoA\], Pharmokinetics \[PK\]. Through such an understanding, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of another to treat a disease etc.
+RxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call 'Concept'. Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY's are Mechanism of Action \[MoA\], Pharmokinetics \[PK\]. Through such an understanding, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of another to treat a disease etc.
 
 ## An example of diseases that a drug is used in the treatment of
 
@@ -23,7 +23,7 @@ knitr::include_graphics("screenshots/atenolol.png", error=FALSE)
 
 ## Comparing two drugs
 
-We are going to see the hierarchy of two drugs in the next slide. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical \[ATC\]which has a further sub division called Cardiovascular system adn then a narrower division called Beta Blocking Agents and so on.
+We are going to see the hierarchy of two drugs in the next slide. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical \[ATC\] which has a further sub division called Cardiovascular system and then a narrower division called Beta Blocking Agents and so on.
 
 ## Atenolol
 
@@ -49,7 +49,7 @@ Design and development of Cohort identification and analysis tool
 
 ## The people
 
-I am grateful to have gotten inputs from Dr. Saravanan Kanakasabai, Mr. Gregory Klopper and Mr. Rick Tuason and of course my Supervisor Mr. Harlan A Nelson from the Clinical Research Department.
+I am grateful to Dr. Saravanan Kanakasabai, Mr. Gregory Klopper and Mr. Rick Tuason and of course my Supervisor Mr. Harlan A Nelson from the Clinical Research Department for guiding me, providing valuable feedback, help understand medicinal terminologies, help us access patient related data from IU Health Server (Server Data Source Mart) and providing me with this wonderful Internship experience.
 
 ## How did this project make a difference to the health care system at IU Health?
 
