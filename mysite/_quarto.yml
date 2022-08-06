@@ -9,6 +9,8 @@ website:
         text: Home
       - href: about.qmd
         text: about
+      - href: Document0.qmd
+        text: Internship Summary
       - href: Documentation.qmd
         text: Parsing XML file
       - href: Documentation2.qmd

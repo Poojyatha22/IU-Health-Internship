@@ -1,5 +1,5 @@
 ---
-title: "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)"
+title: "IU Health Documentation part 2"
 author: "Harlan A Nelson, Poojyatha Venkatesh"
 format: revealjs
 editor: visual

@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-html/tabby.min.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-html.min.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="Documentation0_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Documentation0_files/libs/quarto-html/tabby.min.js"></script>
+<script src="Documentation0_files/libs/quarto-html/popper.min.js"></script>
+<script src="Documentation0_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="Documentation0_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Documentation0_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet">
+<link href="Documentation0_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-0.9.592">
 
   <meta name="author" content="Harlan A Nelson, Poojyatha Venkatesh">
-  <title>Case Study parsing XML with R demonstrated with RxNorm - IU Health Documentation part 2</title>
+  <title>Summary of the IU Health DS Internship</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="Documentation0_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="Documentation0_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -24,11 +24,11 @@
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto.css" id="theme">
-  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="Documentation0_files/libs/revealjs/dist/theme/quarto.css" id="theme">
+  <link href="Documentation0_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="Documentation0_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="Documentation0_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="Documentation0_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
 
   .callout {
@@ -319,68 +319,62 @@
     <div class="slides">
 
 <section id="title-slide" class="center">
-  <h1 class="title">IU Health Documentation part 2</h1>
+  <h1 class="title">Summary of the IU Health DS Internship</h1>
   <p class="author">Harlan A Nelson, Poojyatha Venkatesh</p>
 </section>
 
-<section id="microsoft-sql-server" class="slide level2">
-<h2>MICROSOFT SQL SERVER</h2>
-<p>Now that we have seen how a complex xml document can be converted into a csv files, the next step we do is that we try to upload these files to the Microsoft SQL Server.</p>
-<p>[For next slide, swipe left if you’re vieweing through a mobile phone, if you’re using a PC, hit ‘pageup/pagedown’]</p>
-
-<img data-src="screenshots/sqlserver.png" style="width:50.0%" class="r-stretch"></section>
-<section id="access-data-related-to-patients-from-the-edw-cerner-data-source-mart-through-sql" class="slide level2">
-<h2>Access data related to patients from the EDW Cerner Data Source Mart through SQL :</h2>
-
-<img data-src="screenshots/Cerner.png" style="width:50.0%" class="r-stretch"></section>
-<section id="finding-commonalities-between-patient-data-and-drug-data" class="slide level2">
-<h2>Finding Commonalities between patient data and drug data</h2>
-<p>The next step was to find out commonalities between this data (data that was already existing in the IU Health server) and the data on MSS (microsoft sql server , in other words, that data that we uploaded).</p>
-<p>Upon some exploration, I found that CatalogCVDisplayDSC column from the above screenshot and a column called from_name from one of the uplaoded tables called association were the same. So, we tried to create a crosswalk between the both. Below is the process of creating a crosswalk.</p>
+<section id="purpose-of-this-internship" class="slide level2">
+<h2>Purpose of this Internship</h2>
+<p>One of the main objectives of this Internship was to form a great understanding of medicinal drugs, their hierarchy, their nomenclature etc so that we can easily understand their relationship with diseases and patients which will help us in forming patient cohorts or cohorts for drugs</p>
 </section>
-<section id="merging-data" class="slide level2">
-<h2>Merging data :</h2>
-<p>First we need to establish the connection with the Cerner:</p>
-
-<img data-src="screenshots/connnection-1.png" style="width:50.0%" class="r-stretch"></section>
-<section id="after-establishing-connection-we-access-data-from-the-cerner" class="slide level2">
-<h2>After establishing connection, we access data from the Cerner :</h2>
-
-<img data-src="screenshots/2.png" style="width:50.0%" class="r-stretch"></section>
-<section id="we-now-pick-the-columns-that-we-are-particularly-interested-in-which-is-catalogcvcd-and-catalogcvdisplaydsc-which-are-the-drug-code-and-drugs-names." class="slide level2">
-<h2>We now pick the columns that we are particularly interested in which is ‘CatalogCVCD ’and ’CatalogCVDisplayDSC’ which are the drug code and drugs names.</h2>
-
-<img data-src="screenshots/3.png" style="width:50.0%" class="r-stretch"></section>
-<section id="accessing-from_name-from-association-table-of-xml" class="slide level2">
-<h2>Accessing from_name from association table of xml :</h2>
-
-<img data-src="screenshots/4.png" style="width:50.0%" class="r-stretch"></section>
-<section id="accessing-from_name-from-association-table-of-dts-as-well" class="slide level2">
-<h2>Accessing from_name from association table of dts as well :</h2>
-
-<img data-src="screenshots/5.png" style="width:50.0%" class="r-stretch"></section>
-<section id="crosswalk" class="slide level2">
-<h2>Crosswalk</h2>
-<p>For comparing two sets of strings, we convert them to a standard format - i.e.&nbsp;remove any extra characters that do not add value, convert all the string to either lower or upper strings, etc. Before we merge the data, we need to find out what are the strings that are exactly similar. For this, we calculate string_dist which tells us how similar two strings are. But this score alone may not be enough because two string can be in totally different lengths. Therefore, we need to find a way to normalise this. So we divide the string distance by the length of the string to calculate the simscore (similarity score) to check if two strings are similar.</p>
+<section id="more-on-hierarchy-and-the-objective" class="slide level2">
+<h2>More on hierarchy and the objective :</h2>
+<p>RxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call ‘Concept’.Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY’s are Mechanism of Action [MoA], Pharmokinetics [PK]. Through such an understanding, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of another to treat a disease etc.</p>
 </section>
-<section id="simscore-similarity-score" class="slide level2">
-<h2>Simscore (Similarity Score)</h2>
+<section id="an-example-of-diseases-that-a-drug-is-used-in-the-treatment-of" class="slide level2">
+<h2>An example of diseases that a drug is used in the treatment of:</h2>
+<p>In the below picture, we can see that a drug called ‘atenolol’ is used in the treatment of various diseases that are in the different branches - ‘Sick Synus Syndrome’ , ‘Bradycardia’ , ‘Myocardial Infarction’ , ‘Arrhythmia, Sinus’ , ‘Ventricular Fibrillation’ and ‘Shock, Cardiogenic’.</p>
 
-<img data-src="screenshots/simscore.png" style="width:50.0%" class="r-stretch"></section>
-<section id="creating-the-final-crosswalk-through-row-binding.-we-form-a-cross-between-xml-dts-and-the-cerner-data-table-1." class="slide level2">
-<h2>Creating the final crosswalk through row binding. We form a cross between xml, dts and the cerner data (table 1).</h2>
-
-<img data-src="screenshots/7.png" style="width:50.0%" class="r-stretch"></section>
-<section id="after-creating-this-crosswalk-we-upload-this-to-the-microsoft-sql-server" class="slide level2">
-<h2>After creating this crosswalk, we upload this to the Microsoft SQL Server</h2>
-
-<img data-src="screenshots/8.png" style="width:50.0%" class="r-stretch"></section>
-<section id="forming-cohorts-in-drugs-data-and-patient-data" class="slide level2">
-<h2>Forming Cohorts in drugs data and patient data :</h2>
-<p>Here we are trying to group drugs based on the criteria ‘Alcohol Drinking’</p>
-
-
-<img data-src="screenshots/Grouping.png" style="width:50.0%" class="r-stretch"><div class="footer footer-default">
+<img data-src="screenshots/atenolol.png" style="width:50.0%" class="r-stretch"></section>
+<section id="comparing-two-drugs" class="slide level2">
+<h2>Comparing two drugs</h2>
+<p>We are going to see the hierarchy of two drugs in the next slide. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical [ATC]which has a further sub division called Cardiovascular system adn then a narrower division called Beta Blocking Agents and so on.</p>
+</section>
+<section id="atenolol" class="slide level2">
+<h2>Atenolol</h2>
+<div class="cell">
+<div class="cell-output-display">
+<p><img data-src="screenshots/atenololhierarchy.png" style="width:50.0%;height:75.0%"></p>
+</div>
+</div>
+</section>
+<section id="bisoprol" class="slide level2">
+<h2>Bisoprol</h2>
+<div class="cell">
+<div class="cell-output-display">
+<p><img data-src="screenshots/bisoprolpath.png" style="width:40.0%;height:15.0%"></p>
+</div>
+</div>
+</section>
+<section id="more-about-the-my-team---clinical-research-department-at-iu-health" class="slide level2">
+<h2>More about the my team - Clinical Research Department at IU Health :</h2>
+<p>Operation of Clinical Trials in Cerner (managing Protocol and Subject information, building Pre-screening to identify trial candidates, building Order sets for research protocols)</p>
+<p>Feasibility evaluation, identification of patient cohorts for both retrospective and prospective clinical research, data extraction and analysis as well as development of ML models for research</p>
+<p>Design and development of Cohort identification and analysis tool</p>
+</section>
+<section id="the-people" class="slide level2">
+<h2>The people:</h2>
+<p>I am grateful to have gotten inputs from Dr.&nbsp;Saravanan Kanakasabai, Mr.&nbsp;Gregory Klopper and Mr.&nbsp;Rick Tuason and of course my Supervisor Mr.&nbsp;Harlan A Nelson from the Clinical Research Department.</p>
+</section>
+<section id="how-did-this-project-make-a-difference-to-the-health-care-system-at-iu-health" class="slide level2">
+<h2>How did this project make a difference to the health care system at IU Health?</h2>
+<p>Instead of associating drugs with diseases, we delve deeper and make searches more complex through including more facets into hierarchy like pharmacological class, concept types, etc. Correlation of drug regimens to diseases and health outcomes.</p>
+</section>
+<section id="future-work" class="slide level2">
+<h2>Future Work</h2>
+<p>Productionize so that it can be run every month – RxNorm updates the drug data everymonth. A code that automates the job of downloading the latest drug data from RxNorm, parsing the xml files and stage them into Cerner Data Source Mart</p>
+<p>Use the ontologies to correlate treatments with health outcomes</p>
+<div class="footer footer-default">
 
 </div>
 </section>
@@ -388,19 +382,19 @@
   </div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <script src="Documentation0_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="Documentation0_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="Documentation0_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="Documentation0_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="Documentation0_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="Documentation0_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="site_libs/revealjs/plugin/search/search.js"></script>
-  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script src="Documentation0_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="Documentation0_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="Documentation0_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="Documentation0_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>

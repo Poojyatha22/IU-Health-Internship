@@ -4,7 +4,7 @@
     "href": "about.html",
     "title": "Indiana University Health - Data Science Internship",
     "section": "",
-    "text": "I just though I’ll share my work at Indiana University Health as a Data Science Intern! The goal of this internship was to download drug data from the RxNorm website ( https://www.nlm.nih.gov/research/umls/rxnorm/overview.html ), analyse this data and try to merge the data related to patients in the IU Health Server so that we can form cohorts of drugs / patients.\nRxNorm is a normlised way of naming drugs. Drugs data could exist in different sources with slightly varied names. So RxNorm has a standard was recognizing these drugs with its nomenclature. It also releases drug related data every month with the updated drug list.\nYou can see the summary of the work I have done with the help of my awesome supervisor Harlan A Nelson! I hope you gain something useful out of this and thanks for checking this out!"
+    "text": "I just though I’ll share my work at Indiana University Health as a Data Science Intern! The goal of this internship was to download drug data from the RxNorm website ( https://www.nlm.nih.gov/research/umls/rxnorm/overview.html ), analyse this data and try to merge the data related to patients in the IU Health Server so that we can form cohorts of drugs / patients.\nRxNorm is a normalised way of naming drugs. Drugs data could exist in different sources with slightly varied names. So RxNorm has a standard was recognizing these drugs with its nomenclature. It also releases drug related data every month with the updated drug list.\nYou can see the summary of the work I have done with the help of my awesome supervisor Harlan A Nelson! I hope you gain something useful out of this and thanks for checking this out!"
   },
   {
     "objectID": "Documentation.html",
@@ -12,111 +12,6 @@
     "title": "IU Health Internship",
     "section": "",
     "text": "pacman::p_load(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)\n\nWe load the xml document here :\n\nd <- xml2::read_xml(here::here(\"inst/Core_MEDRT_DTS/Core_MEDRT_20220705_DTS.xml\"))\n\nOut of the entire XML document, we are particularly focused on the <concept> tag :\n\ndconcept <-  xml_find_all(d, 'concept')  \n\nLet’s see a code snippet of the tag (one of the concept tags):\n\nhtmltidy::xml_view(dconcept[1])\n\n\n\n\n\nLet us look at another concept tag :\n\nhtmltidy::xml_view(dconcept[9])\n\n\n\n\n\nIn the above code snippet, you will notice that the children tags of concept[9] is different from concept[1]. So how do we convert this concept tag into one table when children tags are different? This would be hard to accomplish since we would aim to make each of these sub tags as unique columns in the concept table. Therefore, it is better to make each of these children tags as unique tables while retaining the other common children tags of concept.\n\nd1 <- \n    dconcept[1:6] %>% \n    as_list() %>% \n    tibble (c= .)\n\nd1 \n\n# A tibble: 6 × 1\n  c                \n  <list>           \n1 <named list [8]> \n2 <named list [29]>\n3 <named list [8]> \n4 <named list [8]> \n5 <named list [15]>\n6 <named list [12]>\n\n\nNow let us unnest_wider this further to see how it opens out :\n\nd2 <- \n  d1 |> \n  unnest_wider(col=everything())\n\nNew names:\nNew names:\nNew names:\nNew names:\nNew names:\nNew names:\n• `property` -> `property...7`\n• `property` -> `property...8`\n\nd2 %>% head()\n\n# A tibble: 6 × 35\n  namespace  name   code   id     status synonym      property...7 property...8\n  <list>     <list> <list> <list> <list> <list>       <list>       <list>      \n1 <list [1]> <list> <list> <list> <list> <named list> <named list> <named list>\n2 <list [1]> <list> <list> <list> <list> <named list> <named list> <named list>\n3 <list [1]> <list> <list> <list> <list> <named list> <named list> <named list>\n4 <list [1]> <list> <list> <list> <list> <named list> <named list> <named list>\n5 <list [1]> <list> <list> <list> <list> <NULL>       <NULL>       <NULL>      \n6 <list [1]> <list> <list> <list> <list> <named list> <named list> <named list>\n# … with 27 more variables: association...9 <list>, association...10 <list>,\n#   association...11 <list>, association...12 <list>, association...13 <list>,\n#   association...14 <list>, association...15 <list>, association...16 <list>,\n#   association...17 <list>, association...18 <list>, association...19 <list>,\n#   association...20 <list>, association...21 <list>, association...22 <list>,\n#   association...23 <list>, association...24 <list>, association...25 <list>,\n#   association...26 <list>, association...27 <list>, …\n\n\nWe see that this concept tag has both concept as well as synonym. But we are particularly interested in the <property> sub tag. So\n\n#|message: false\n#|warning: false\n dc0<-\n  \n  dconcept[1:6] %>%\n  as_list() %>%\n  tibble(c = .) %>% \n  unnest_wider(col=c) %>% \n  select(namespace:status, starts_with('property')) %>% \n  pivot_longer(starts_with('property'), names_to = 'propertyname', values_to = 'property') \n\nNew names:\nNew names:\nNew names:\nNew names:\nNew names:\nNew names:\n• `property` -> `property...7`\n• `property` -> `property...8`\n\ndc0\n\n# A tibble: 24 × 7\n   namespace  name       code       id         status propertyname  property    \n   <list>     <list>     <list>     <list>     <list> <chr>         <list>      \n 1 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...7  <named list>\n 2 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...8  <named list>\n 3 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...10 <NULL>      \n 4 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...11 <NULL>      \n 5 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...7  <named list>\n 6 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...8  <named list>\n 7 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...10 <NULL>      \n 8 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...11 <NULL>      \n 9 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...7  <named list>\n10 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...8  <named list>\n# … with 14 more rows\n\n\nAfter selecting the necessary columns and the ones starting with ‘property’, we pivot longer and the result of that is below :\n\n dc0<-\n  \n  dconcept[1:4] %>% \n  as_list() %>%\n  tibble(c = .) %>% \n  unnest_wider(col=c) %>% \n  select(namespace:status, starts_with('property')) %>% \n  pivot_longer(starts_with('property'), names_to = 'propertyname', values_to = 'property') \n\nNew names:\nNew names:\nNew names:\nNew names:\n• `property` -> `property...7`\n• `property` -> `property...8`\n\ndc0\n\n# A tibble: 8 × 7\n  namespace  name       code       id         status propertyname property    \n  <list>     <list>     <list>     <list>     <list> <chr>        <list>      \n1 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...7 <named list>\n2 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...8 <named list>\n3 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...7 <named list>\n4 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...8 <named list>\n5 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...7 <named list>\n6 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...8 <named list>\n7 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...7 <named list>\n8 <list [1]> <list [1]> <list [1]> <list [1]> <list> property...8 <named list>\n\n\nIn the below document, we unnest the columns that start with ‘property..’ again, in order to see what exactly are in those columns :\n\ndc1<-\n  \n  dc0 %>% unnest_longer(col = property) %>% \n  \n  select(-propertyname) %>% \n  filter(!is.na(property_id)) %>% \n  pivot_wider(names_from = property_id, values_from = property, names_prefix = 'property_')  %>% \n   unnest_longer(col = everything()) %>% \n  select(-ends_with('id')) %>% \n  unnest(col = starts_with('property')  ) %>% \n  unnest(col = starts_with('property'))\n\nWarning: Values from `property` are not uniquely identified; output will contain list-cols.\n* Use `values_fn = list` to suppress this warning.\n* Use `values_fn = {summary_fun}` to summarise duplicates.\n* Use the following dplyr code to identify duplicates.\n  {data} %>%\n    dplyr::group_by(namespace, name, code, id, status, property_id) %>%\n    dplyr::summarise(n = dplyr::n(), .groups = \"drop\") %>%\n    dplyr::filter(n > 1L)\n\ndc1\n\n# A tibble: 8 × 7\n  namespace name      code  status property_content property_name property_value\n  <chr>     <chr>     <chr> <chr>  <chr>            <chr>         <chr>         \n1 MED-RT    1-Compar… C298  ACTIVE MED-RT           CTY           PK            \n2 MED-RT    1-Compar… C298  ACTIVE MED-RT           NUI           N0000000060   \n3 MED-RT    14-alpha… C300… ACTIVE MED-RT           CTY           MoA           \n4 MED-RT    14-alpha… C300… ACTIVE MED-RT           NUI           N0000020025   \n5 MED-RT    2-Compar… C300  ACTIVE MED-RT           CTY           PK            \n6 MED-RT    2-Compar… C300  ACTIVE MED-RT           NUI           N0000000061   \n7 MED-RT    3-Compar… C302  ACTIVE MED-RT           CTY           PK            \n8 MED-RT    3-Compar… C302  ACTIVE MED-RT           NUI           N0000000062   \n\n\nIn the above output, we observe a pattern which is, CTY and NUI keep repeating in property name with their corresponding values in the property_value row. So now, we can just pivot wider ‘property_name’ with values from ‘property_value’ (meaning that CTY and NUI will be the new columns replacing the original column they are from - property_name, and the values that these two columns will have will be taken from the column ‘property value’).\n\ndc2 <-  \n  dc1 %>% pivot_wider(names_from = property_name, values_from = property_value)\n\ndc2 %>% head()\n\n# A tibble: 4 × 7\n  namespace name                       code  status property_content CTY   NUI  \n  <chr>     <chr>                      <chr> <chr>  <chr>            <chr> <chr>\n1 MED-RT    1-Compartment [PK]         C298  ACTIVE MED-RT           PK    N000…\n2 MED-RT    14-alpha Demethylase Inhi… C300… ACTIVE MED-RT           MoA   N000…\n3 MED-RT    2-Compartment [PK]         C300  ACTIVE MED-RT           PK    N000…\n4 MED-RT    3-Compartment [PK]         C302  ACTIVE MED-RT           PK    N000…\n\n\nNow that we have completely converted the <property> tag from concept into a complete table, we go ahead and save this table as a csv file which is what we’ve done below :\n\ndc2 %>% data.table::fwrite(here::here('data','dts_concept_properties.csv'))\n\n\ndc2 <-  data.table::fread(here::here('data','dts_concept_properties.csv'))\n\n\ndc2 %>% head()\n\n   namespace                                  name    code status\n1:    MED-RT                    1-Compartment [PK]    C298 ACTIVE\n2:    MED-RT 14-alpha Demethylase Inhibitors [MoA] C300411 ACTIVE\n3:    MED-RT                    2-Compartment [PK]    C300 ACTIVE\n4:    MED-RT                    3-Compartment [PK]    C302 ACTIVE\n   property_content CTY         NUI\n1:           MED-RT  PK N0000000060\n2:           MED-RT MoA N0000020025\n3:           MED-RT  PK N0000000061\n4:           MED-RT  PK N0000000062\n\n\nThis is a snippet of the manipulation that is done on a ‘part’ of the dataset (remember ‘dconcept[1:4]’ that takes into consideration the first four tags instead of ‘dconcept’ which would have taken the entire data-set into consideration."
-  },
-  {
-    "objectID": "Documentation2.html#microsoft-sql-server",
-    "href": "Documentation2.html#microsoft-sql-server",
-    "title": "IU Health Documentation part 2",
-    "section": "MICROSOFT SQL SERVER",
-    "text": "MICROSOFT SQL SERVER\nNow that we have seen how a complex xml document can be converted into a csv files, the next step we do is that we try to upload these files to the Microsoft Azure Data Studio.\n[For next slide, swipe left if you’re vieweing through a mobile phone, if you’re using a PC, hit ‘pageup/pagedown’]"
-  },
-  {
-    "objectID": "Documentation2.html#access-data-related-to-patients-from-the-edw-cerner-data-source-mart-through-sql",
-    "href": "Documentation2.html#access-data-related-to-patients-from-the-edw-cerner-data-source-mart-through-sql",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
-    "section": "Access data related to patients from the EDW Cerner Data Source Mart through SQL :",
-    "text": "Access data related to patients from the EDW Cerner Data Source Mart through SQL :"
-  },
-  {
-    "objectID": "Documentation2.html#finding-commonalities-between-patient-data-and-drug-data",
-    "href": "Documentation2.html#finding-commonalities-between-patient-data-and-drug-data",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
-    "section": "Finding Commonalities between patient data and drug data",
-    "text": "Finding Commonalities between patient data and drug data\nThe next step was to find out commonalities between this data (data that was already existing in the IU Health server) and the data on MSS (microsoft sql server , in other words, that data that we uploaded).\nUpon some exploration, I found that CatalogCVDisplayDSC column from the above screenshot and a column called from_name from one of the uplaoded tables called association were the same. So, we tried to create a crosswalk between the both. Below is the process of creating a crosswalk."
-  },
-  {
-    "objectID": "Documentation2.html#merging-data",
-    "href": "Documentation2.html#merging-data",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
-    "section": "Merging data :",
-    "text": "Merging data :\nFirst we need to establish the connection with the Cerner:"
-  },
-  {
-    "objectID": "Documentation2.html#after-establishing-connection-we-access-data-from-the-cerner",
-    "href": "Documentation2.html#after-establishing-connection-we-access-data-from-the-cerner",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
-    "section": "After establishing connection, we access data from the Cerner :",
-    "text": "After establishing connection, we access data from the Cerner :"
-  },
-  {
-    "objectID": "Documentation2.html#we-now-pick-the-columns-that-we-are-particularly-interested-in-which-is-catalogcvcd-and-catalogcvdisplaydsc-which-are-the-drug-code-and-drugs-names.",
-    "href": "Documentation2.html#we-now-pick-the-columns-that-we-are-particularly-interested-in-which-is-catalogcvcd-and-catalogcvdisplaydsc-which-are-the-drug-code-and-drugs-names.",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
-    "section": "We now pick the columns that we are particularly interested in which is ‘CatalogCVCD ’and ’CatalogCVDisplayDSC’ which are the drug code and drugs names.",
-    "text": "We now pick the columns that we are particularly interested in which is ‘CatalogCVCD ’and ’CatalogCVDisplayDSC’ which are the drug code and drugs names."
-  },
-  {
-    "objectID": "Documentation2.html#now-we-access-from_name-from-association-table",
-    "href": "Documentation2.html#now-we-access-from_name-from-association-table",
-    "title": "IU Health Documentation part 2",
-    "section": "Now, we access from_name from association table :",
-    "text": "Now, we access from_name from association table :"
-  },
-  {
-    "objectID": "Documentation2.html#similarly-we-access-from_name-from-dts-as-well",
-    "href": "Documentation2.html#similarly-we-access-from_name-from-dts-as-well",
-    "title": "IU Health Documentation part 2",
-    "section": "Similarly, we access from_name from dts as well :",
-    "text": "Similarly, we access from_name from dts as well :"
-  },
-  {
-    "objectID": "Documentation2.html#crosswalk",
-    "href": "Documentation2.html#crosswalk",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
-    "section": "Crosswalk",
-    "text": "Crosswalk\nFor comparing two sets of strings, we convert them to a standard format - i.e. remove any extra characters that do not add value, convert all the string to either lower or upper strings, etc. Before we merge the data, we need to find out what are the strings that are exactly similar. For this, we calculate string_dist which tells us how similar two strings are. But this score alone may not be enough because two string can be in totally different lengths. Therefore, we need to find a way to normalise this. So we divide the string distance by the length of the string to calculate the simscore (similarity score) to check if two strings are similar."
-  },
-  {
-    "objectID": "Documentation2.html#simscore",
-    "href": "Documentation2.html#simscore",
-    "title": "IU Health Documentation part 2",
-    "section": "Simscore",
-    "text": "Simscore"
-  },
-  {
-    "objectID": "Documentation2.html#after-this-we-go-ahead-and-finally-create-the-final-crosswalk-through-row-binding.-we-form-a-cross-between-xml-dts-and-the-cerner-data-table-1.",
-    "href": "Documentation2.html#after-this-we-go-ahead-and-finally-create-the-final-crosswalk-through-row-binding.-we-form-a-cross-between-xml-dts-and-the-cerner-data-table-1.",
-    "title": "IU Health Documentation part 2",
-    "section": "After, this we go ahead and finally create the final crosswalk through row binding. We form a cross between xml, dts and the cerner data (table 1).",
-    "text": "After, this we go ahead and finally create the final crosswalk through row binding. We form a cross between xml, dts and the cerner data (table 1)."
-  },
-  {
-    "objectID": "Documentation2.html#after-creating-this-crosswalk-we-upload-this-to-the-microsoft-sql-server-a-well.",
-    "href": "Documentation2.html#after-creating-this-crosswalk-we-upload-this-to-the-microsoft-sql-server-a-well.",
-    "title": "IU Health Documentation part 2",
-    "section": "After creating this crosswalk, we upload this to the Microsoft SQL Server a well.",
-    "text": "After creating this crosswalk, we upload this to the Microsoft SQL Server a well."
-  },
-  {
-    "objectID": "Documentation2.html#forming-cohorts-in-drugs-data-and-patient-data",
-    "href": "Documentation2.html#forming-cohorts-in-drugs-data-and-patient-data",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
-    "section": "Forming Cohorts in drugs data and patient data :",
-    "text": "Forming Cohorts in drugs data and patient data :\nHere we are trying to group drugs based on the criteria ‘Alcohol Drinking’"
-  },
-  {
-    "objectID": "Documentation3.html",
-    "href": "Documentation3.html",
-    "title": "CSV File reading",
-    "section": "",
-    "text": "pacman::p_load(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)\n\nLoading the xml document :\n\nd <- xml2::read_xml(here::here(\"inst/Core_MEDRT_DTS/Core_MEDRT_20220705_DTS.xml\"))\n\nNamespace\n\ndns <- xml_find_all(d, 'namespace') \n\n\ndns[1] %>% htmltidy::xml_view()\n\n\n\n\n\n\nns <- data.table::fread(here::here('data','dts_namespace.csv'))\nns %>% head()\n\n     name   code    id    version    authority\n1: MED-RT N32768 32768 2022.05.02 Apelon, Inc.\n\n\nAssociation Type\n\nasntyp <- xml_find_all(d, 'assntype') \n\n\nasntyp[3] %>% htmltidy::xml_view()\n\n\n\n\n\n\nat <- data.table::fread(here::here('data','dts_associationtype.csv'))\nat %>% head()\n\n   namespace           name id       inverse_name\n1:    MED-RT Preferred Term  2 Preferred Term for\n2:    MED-RT        Synonym  5        Synonym for\n3:    MED-RT      Parent Of  1           Child Of\n4:    MED-RT     Synonym Of  9         Synonym Of\n5:    MED-RT        has_MoA 10             MoA_of\n6:    MED-RT         has_PE 11              PE_of\n\n\nAssociation\n\nasn <-  xml_find_all(d, 'association')  \n\n\nasn[1] %>% htmltidy::xml_view()\n\n\n\n\n\n\nan <- data.table::fread(here::here('data','dts_association.csv'))\nan %>% head()\n\n   namespace association_name from_namespace\n1:    MED-RT       Synonym Of       RxNorm R\n2:    MED-RT       Synonym Of       RxNorm R\n3:    MED-RT       Synonym Of       RxNorm R\n4:    MED-RT       Synonym Of       RxNorm R\n5:    MED-RT       Synonym Of       RxNorm R\n6:    MED-RT       Synonym Of       RxNorm R\n                                                     from_name to_namespace\n1:        (all-Z)-4,7,10,13,16-docosapentaenoic acid [1360626]         MeSH\n2: .alpha.,.beta.-methylene adenosine 5'-diphosphate [2552302]         MeSH\n3:                      .alpha.-chlorohydrin, (+/-)- [2396781]         MeSH\n4:                              .alpha.-phellandrene [2530131]         MeSH\n5:                                 .alpha.-terpinene [2542349]         MeSH\n6:                                     .beta.-ionone [2371702]         MeSH\n                                                   to_name qualifier_content\n1:    cis-7,10,13,16,19-docosapentaenoic acid [M000636321]            MED-RT\n2: alpha,beta-methyleneadenosine 5'-diphosphate [M0515143]            MED-RT\n3:                           alpha-Chlorohydrin [M0000786]            MED-RT\n4:                           alpha phellandrene [M0046925]            MED-RT\n5:                              alpha-terpinene [M0313696]            MED-RT\n6:                                  beta-ionone [M0051759]            MED-RT\n   qualifier_name qualifier_value\n1:      Authority         NLMUMLS\n2:      Authority         NLMUMLS\n3:      Authority         NLMUMLS\n4:      Authority         NLMUMLS\n5:      Authority         NLMUMLS\n6:      Authority         NLMUMLS\n\n\nQualtype\n\nqt <-  xml_find_all(d, 'qualtype') \n\n\nqt[1] %>% htmltidy::xml_view()\n\n\n\n\n\n\nqt <- data.table::fread(here::here('data','dts_qualtype.csv'))\nqt %>% head()\n\n   content      name id\n1:  MED-RT Authority  1\n\n\nConcept tag :\n\nconcept <-  xml_find_all(d, 'concept')\n\n\nconcept[1] %>% htmltidy::xml_view()\n\n\n\n\n\nThe concept tag has been split into two tables :\n[ 1 ] Concept properties\n\ncp <- data.table::fread(here::here('data','dts_concept_properties.csv'))\ncp %>% head()\n\n   namespace                                  name    code status\n1:    MED-RT                    1-Compartment [PK]    C298 ACTIVE\n2:    MED-RT 14-alpha Demethylase Inhibitors [MoA] C300411 ACTIVE\n3:    MED-RT                    2-Compartment [PK]    C300 ACTIVE\n4:    MED-RT                    3-Compartment [PK]    C302 ACTIVE\n   property_content CTY         NUI\n1:           MED-RT  PK N0000000060\n2:           MED-RT MoA N0000020025\n3:           MED-RT  PK N0000000061\n4:           MED-RT  PK N0000000062\n\n\n[ 2 ] Concept Synonyms\n\ncs <- data.table::fread(here::here('data','dts_concept_synonyms.csv'))\ncs %>% head()\n\n   cs_namespace                                              cs_name    code\n1:       MED-RT                                   1-Compartment [PK]    C298\n2:       MED-RT                14-alpha Demethylase Inhibitors [MoA] C300411\n3:       MED-RT                                   2-Compartment [PK]    C300\n4:       MED-RT                                   3-Compartment [PK]    C302\n5:       MED-RT 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor [EPC] C635228\n6:       MED-RT 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor [EPC] C635228\n       id status namespace           name to_namespace\n1:    299 ACTIVE    MED-RT Preferred Term       MED-RT\n2: 300411 ACTIVE    MED-RT Preferred Term       MED-RT\n3:    301 ACTIVE    MED-RT Preferred Term       MED-RT\n4:    303 ACTIVE    MED-RT Preferred Term       MED-RT\n5: 635228 ACTIVE    MED-RT Preferred Term       MED-RT\n6: 635228 ACTIVE    MED-RT Preferred Term       MED-RT\n                                          to_name to_code preferred\n1:                                  1-Compartment     T82      TRUE\n2:                14-alpha Demethylase Inhibitors    T162      TRUE\n3:                                  2-Compartment    T309      TRUE\n4:                                  3-Compartment    T438      TRUE\n5: 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor    T618      TRUE\n6: 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor    T617      TRUE\n\n\nTerm tag\n\nterm <-  xml_find_all(d, 'term')\n\n\nterm[1] %>% htmltidy::xml_view()\n\n\n\n\n\n\nter <- data.table::fread(here::here('data','dts_term.csv'))\nter %>% head()\n\n   namespace                                 name   code    id status\n1:    MED-RT Cyclin-dependent Kinase 4 Inhibitors T58551 58551 ACTIVE\n2:    MED-RT Cyclin-dependent Kinase 6 Inhibitors T58554 58554 ACTIVE\n3:    MED-RT                        1-Compartment    T82    82 ACTIVE\n4:    MED-RT      14-alpha Demethylase Inhibitors   T162   162 ACTIVE\n5:    MED-RT                        2-Compartment   T309   309 ACTIVE\n6:    MED-RT                        3-Compartment   T438   438 ACTIVE"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Poojyatha Venkatesh",
-    "section": "",
-    "text": "This is Poojyatha Venkatesh! I am passionate about Data Science and playing around with data transformation and manipulation. I recently graduated from Indiana University Purdue University ( 8th of August 2022 ), Indianapolis with a Master’s degree in Applied Data Science. I got my Bachelors in Information Technology from College of Engineering - Guindy, Anna University.\nFun fact : I am the Graduate Ambassador for the School of Informatics and Computing, at IUPUI! So if you do have any plans of joining IUPUI or queries about the MS in Applied Data Science program / admissions / campus life, you could just connect with me on LinkedIn!"
   },
   {
     "objectID": "Documentation0.html#purpose-of-this-internship",
@@ -154,45 +49,108 @@
     "text": "Future Work\nProductionize so that it can be run every month – RxNorm updates the drug data everymonth. A code that automates the job of downloading the latest drug data from RxNorm, parsing the xml files and stage them into Cerner Data Source Mart\nUse the ontologies to correlate treatments with health outcomes"
   },
   {
-    "objectID": "Documentation2.html",
-    "href": "Documentation2.html",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
-    "section": "",
-    "text": "Now that we have seen how a complex xml document can be converted into a csv files, the next step we do is that we try to upload these files to the Microsoft SQL Server.\n[For next slide, swipe left if you’re vieweing through a mobile phone, if you’re using a PC, hit ‘pageup/pagedown’]"
+    "objectID": "Documentation2.html#microsoft-sql-server",
+    "href": "Documentation2.html#microsoft-sql-server",
+    "title": "IU Health Documentation part 2",
+    "section": "MICROSOFT SQL SERVER",
+    "text": "MICROSOFT SQL SERVER\nNow that we have seen how a complex xml document can be converted into a csv files, the next step we do is that we try to upload these files to the Microsoft SQL Server.\n[For next slide, swipe left if you’re vieweing through a mobile phone, if you’re using a PC, hit ‘pageup/pagedown’]"
+  },
+  {
+    "objectID": "Documentation2.html#access-data-related-to-patients-from-the-edw-cerner-data-source-mart-through-sql",
+    "href": "Documentation2.html#access-data-related-to-patients-from-the-edw-cerner-data-source-mart-through-sql",
+    "title": "IU Health Documentation part 2",
+    "section": "Access data related to patients from the EDW Cerner Data Source Mart through SQL :",
+    "text": "Access data related to patients from the EDW Cerner Data Source Mart through SQL :"
+  },
+  {
+    "objectID": "Documentation2.html#finding-commonalities-between-patient-data-and-drug-data",
+    "href": "Documentation2.html#finding-commonalities-between-patient-data-and-drug-data",
+    "title": "IU Health Documentation part 2",
+    "section": "Finding Commonalities between patient data and drug data",
+    "text": "Finding Commonalities between patient data and drug data\nThe next step was to find out commonalities between this data (data that was already existing in the IU Health server) and the data on MSS (microsoft sql server , in other words, that data that we uploaded).\nUpon some exploration, I found that CatalogCVDisplayDSC column from the above screenshot and a column called from_name from one of the uplaoded tables called association were the same. So, we tried to create a crosswalk between the both. Below is the process of creating a crosswalk."
+  },
+  {
+    "objectID": "Documentation2.html#merging-data",
+    "href": "Documentation2.html#merging-data",
+    "title": "IU Health Documentation part 2",
+    "section": "Merging data :",
+    "text": "Merging data :\nFirst we need to establish the connection with the Cerner:"
+  },
+  {
+    "objectID": "Documentation2.html#after-establishing-connection-we-access-data-from-the-cerner",
+    "href": "Documentation2.html#after-establishing-connection-we-access-data-from-the-cerner",
+    "title": "IU Health Documentation part 2",
+    "section": "After establishing connection, we access data from the Cerner :",
+    "text": "After establishing connection, we access data from the Cerner :"
+  },
+  {
+    "objectID": "Documentation2.html#we-now-pick-the-columns-that-we-are-particularly-interested-in-which-is-catalogcvcd-and-catalogcvdisplaydsc-which-are-the-drug-code-and-drugs-names.",
+    "href": "Documentation2.html#we-now-pick-the-columns-that-we-are-particularly-interested-in-which-is-catalogcvcd-and-catalogcvdisplaydsc-which-are-the-drug-code-and-drugs-names.",
+    "title": "IU Health Documentation part 2",
+    "section": "We now pick the columns that we are particularly interested in which is ‘CatalogCVCD ’and ’CatalogCVDisplayDSC’ which are the drug code and drugs names.",
+    "text": "We now pick the columns that we are particularly interested in which is ‘CatalogCVCD ’and ’CatalogCVDisplayDSC’ which are the drug code and drugs names."
   },
   {
     "objectID": "Documentation2.html#accessing-from_name-from-association-table-of-xml",
     "href": "Documentation2.html#accessing-from_name-from-association-table-of-xml",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
+    "title": "IU Health Documentation part 2",
     "section": "Accessing from_name from association table of xml :",
     "text": "Accessing from_name from association table of xml :"
   },
   {
     "objectID": "Documentation2.html#accessing-from_name-from-association-table-of-dts-as-well",
     "href": "Documentation2.html#accessing-from_name-from-association-table-of-dts-as-well",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
+    "title": "IU Health Documentation part 2",
     "section": "Accessing from_name from association table of dts as well :",
     "text": "Accessing from_name from association table of dts as well :"
   },
   {
+    "objectID": "Documentation2.html#crosswalk",
+    "href": "Documentation2.html#crosswalk",
+    "title": "IU Health Documentation part 2",
+    "section": "Crosswalk",
+    "text": "Crosswalk\nFor comparing two sets of strings, we convert them to a standard format - i.e. remove any extra characters that do not add value, convert all the string to either lower or upper strings, etc. Before we merge the data, we need to find out what are the strings that are exactly similar. For this, we calculate string_dist which tells us how similar two strings are. But this score alone may not be enough because two string can be in totally different lengths. Therefore, we need to find a way to normalise this. So we divide the string distance by the length of the string to calculate the simscore (similarity score) to check if two strings are similar."
+  },
+  {
     "objectID": "Documentation2.html#simscore-similarity-score",
     "href": "Documentation2.html#simscore-similarity-score",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
+    "title": "IU Health Documentation part 2",
     "section": "Simscore (Similarity Score)",
     "text": "Simscore (Similarity Score)"
   },
   {
     "objectID": "Documentation2.html#creating-the-final-crosswalk-through-row-binding.-we-form-a-cross-between-xml-dts-and-the-cerner-data-table-1.",
     "href": "Documentation2.html#creating-the-final-crosswalk-through-row-binding.-we-form-a-cross-between-xml-dts-and-the-cerner-data-table-1.",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
+    "title": "IU Health Documentation part 2",
     "section": "Creating the final crosswalk through row binding. We form a cross between xml, dts and the cerner data (table 1).",
     "text": "Creating the final crosswalk through row binding. We form a cross between xml, dts and the cerner data (table 1)."
   },
   {
     "objectID": "Documentation2.html#after-creating-this-crosswalk-we-upload-this-to-the-microsoft-sql-server",
     "href": "Documentation2.html#after-creating-this-crosswalk-we-upload-this-to-the-microsoft-sql-server",
-    "title": "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)",
+    "title": "IU Health Documentation part 2",
     "section": "After creating this crosswalk, we upload this to the Microsoft SQL Server",
     "text": "After creating this crosswalk, we upload this to the Microsoft SQL Server"
+  },
+  {
+    "objectID": "Documentation2.html#forming-cohorts-in-drugs-data-and-patient-data",
+    "href": "Documentation2.html#forming-cohorts-in-drugs-data-and-patient-data",
+    "title": "IU Health Documentation part 2",
+    "section": "Forming Cohorts in drugs data and patient data :",
+    "text": "Forming Cohorts in drugs data and patient data :\nHere we are trying to group drugs based on the criteria ‘Alcohol Drinking’"
+  },
+  {
+    "objectID": "Documentation3.html",
+    "href": "Documentation3.html",
+    "title": "CSV File reading",
+    "section": "",
+    "text": "pacman::p_load(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)\n\nLoading the xml document :\n\nd <- xml2::read_xml(here::here(\"inst/Core_MEDRT_DTS/Core_MEDRT_20220705_DTS.xml\"))\n\nNamespace\n\ndns <- xml_find_all(d, 'namespace') \n\n\ndns[1] %>% htmltidy::xml_view()\n\n\n\n\n\n\nns <- data.table::fread(here::here('data','dts_namespace.csv'))\nns %>% head()\n\n     name   code    id    version    authority\n1: MED-RT N32768 32768 2022.05.02 Apelon, Inc.\n\n\nAssociation Type\n\nasntyp <- xml_find_all(d, 'assntype') \n\n\nasntyp[3] %>% htmltidy::xml_view()\n\n\n\n\n\n\nat <- data.table::fread(here::here('data','dts_associationtype.csv'))\nat %>% head()\n\n   namespace           name id       inverse_name\n1:    MED-RT Preferred Term  2 Preferred Term for\n2:    MED-RT        Synonym  5        Synonym for\n3:    MED-RT      Parent Of  1           Child Of\n4:    MED-RT     Synonym Of  9         Synonym Of\n5:    MED-RT        has_MoA 10             MoA_of\n6:    MED-RT         has_PE 11              PE_of\n\n\nAssociation\n\nasn <-  xml_find_all(d, 'association')  \n\n\nasn[1] %>% htmltidy::xml_view()\n\n\n\n\n\n\nan <- data.table::fread(here::here('data','dts_association.csv'))\nan %>% head()\n\n   namespace association_name from_namespace\n1:    MED-RT       Synonym Of       RxNorm R\n2:    MED-RT       Synonym Of       RxNorm R\n3:    MED-RT       Synonym Of       RxNorm R\n4:    MED-RT       Synonym Of       RxNorm R\n5:    MED-RT       Synonym Of       RxNorm R\n6:    MED-RT       Synonym Of       RxNorm R\n                                                     from_name to_namespace\n1:        (all-Z)-4,7,10,13,16-docosapentaenoic acid [1360626]         MeSH\n2: .alpha.,.beta.-methylene adenosine 5'-diphosphate [2552302]         MeSH\n3:                      .alpha.-chlorohydrin, (+/-)- [2396781]         MeSH\n4:                              .alpha.-phellandrene [2530131]         MeSH\n5:                                 .alpha.-terpinene [2542349]         MeSH\n6:                                     .beta.-ionone [2371702]         MeSH\n                                                   to_name qualifier_content\n1:    cis-7,10,13,16,19-docosapentaenoic acid [M000636321]            MED-RT\n2: alpha,beta-methyleneadenosine 5'-diphosphate [M0515143]            MED-RT\n3:                           alpha-Chlorohydrin [M0000786]            MED-RT\n4:                           alpha phellandrene [M0046925]            MED-RT\n5:                              alpha-terpinene [M0313696]            MED-RT\n6:                                  beta-ionone [M0051759]            MED-RT\n   qualifier_name qualifier_value\n1:      Authority         NLMUMLS\n2:      Authority         NLMUMLS\n3:      Authority         NLMUMLS\n4:      Authority         NLMUMLS\n5:      Authority         NLMUMLS\n6:      Authority         NLMUMLS\n\n\nQualtype\n\nqt <-  xml_find_all(d, 'qualtype') \n\n\nqt[1] %>% htmltidy::xml_view()\n\n\n\n\n\n\nqt <- data.table::fread(here::here('data','dts_qualtype.csv'))\nqt %>% head()\n\n   content      name id\n1:  MED-RT Authority  1\n\n\nConcept tag :\n\nconcept <-  xml_find_all(d, 'concept')\n\n\nconcept[1] %>% htmltidy::xml_view()\n\n\n\n\n\nThe concept tag has been split into two tables :\n[ 1 ] Concept properties\n\ncp <- data.table::fread(here::here('data','dts_concept_properties.csv'))\ncp %>% head()\n\n   namespace                                  name    code status\n1:    MED-RT                    1-Compartment [PK]    C298 ACTIVE\n2:    MED-RT 14-alpha Demethylase Inhibitors [MoA] C300411 ACTIVE\n3:    MED-RT                    2-Compartment [PK]    C300 ACTIVE\n4:    MED-RT                    3-Compartment [PK]    C302 ACTIVE\n   property_content CTY         NUI\n1:           MED-RT  PK N0000000060\n2:           MED-RT MoA N0000020025\n3:           MED-RT  PK N0000000061\n4:           MED-RT  PK N0000000062\n\n\n[ 2 ] Concept Synonyms\n\ncs <- data.table::fread(here::here('data','dts_concept_synonyms.csv'))\ncs %>% head()\n\n   cs_namespace                                              cs_name    code\n1:       MED-RT                                   1-Compartment [PK]    C298\n2:       MED-RT                14-alpha Demethylase Inhibitors [MoA] C300411\n3:       MED-RT                                   2-Compartment [PK]    C300\n4:       MED-RT                                   3-Compartment [PK]    C302\n5:       MED-RT 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor [EPC] C635228\n6:       MED-RT 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor [EPC] C635228\n       id status namespace           name to_namespace\n1:    299 ACTIVE    MED-RT Preferred Term       MED-RT\n2: 300411 ACTIVE    MED-RT Preferred Term       MED-RT\n3:    301 ACTIVE    MED-RT Preferred Term       MED-RT\n4:    303 ACTIVE    MED-RT Preferred Term       MED-RT\n5: 635228 ACTIVE    MED-RT Preferred Term       MED-RT\n6: 635228 ACTIVE    MED-RT Preferred Term       MED-RT\n                                          to_name to_code preferred\n1:                                  1-Compartment     T82      TRUE\n2:                14-alpha Demethylase Inhibitors    T162      TRUE\n3:                                  2-Compartment    T309      TRUE\n4:                                  3-Compartment    T438      TRUE\n5: 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor    T618      TRUE\n6: 4-Hydroxyphenyl-Pyruvate Dioxygenase Inhibitor    T617      TRUE\n\n\nTerm tag\n\nterm <-  xml_find_all(d, 'term')\n\n\nterm[1] %>% htmltidy::xml_view()\n\n\n\n\n\n\nter <- data.table::fread(here::here('data','dts_term.csv'))\nter %>% head()\n\n   namespace                                 name   code    id status\n1:    MED-RT Cyclin-dependent Kinase 4 Inhibitors T58551 58551 ACTIVE\n2:    MED-RT Cyclin-dependent Kinase 6 Inhibitors T58554 58554 ACTIVE\n3:    MED-RT                        1-Compartment    T82    82 ACTIVE\n4:    MED-RT      14-alpha Demethylase Inhibitors   T162   162 ACTIVE\n5:    MED-RT                        2-Compartment   T309   309 ACTIVE\n6:    MED-RT                        3-Compartment   T438   438 ACTIVE"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Poojyatha Venkatesh",
+    "section": "",
+    "text": "This is Poojyatha Venkatesh! I am passionate about Data Science and playing around with data transformation and manipulation. I recently graduated from Indiana University Purdue University ( 8th of August 2022 ), Indianapolis with a Master’s degree in Applied Data Science. I got my Bachelors in Information Technology from College of Engineering - Guindy, Anna University.\nFun fact : I am the Graduate Ambassador for the School of Informatics and Computing, at IUPUI! So if you do have any plans of joining IUPUI or queries about the MS in Applied Data Science program / admissions / campus life, you could just connect with me on LinkedIn!"
   }
 ]
