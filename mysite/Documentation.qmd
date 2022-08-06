@@ -1,11 +1,11 @@
 ---
 title: "IU Health Internship"
-author: "Poojyatha Venkatesh"
+author: "Harlan A Neslon, Poojyatha Venkatesh"
 format: html
 editor: visual
 ---
 
-RxNorm is a normalised naming system for drugs. Medical data that was unstructured was downloaded. It was in an XML format that was highly complex. The first task was to flatten these xml tags. What was challenging was that these XML documents did not have the same children tags. Even the children tags did not have a structure that was similar to eachother. Every child tag was different and the same children tags had different structures.
+RxNorm is a normalised naming system for drugs. Medical data that was unstructured was downloaded. It was in an XML format that was highly complex. The first task was to flatten these xml tags. What was challenging was that these XML documents did not have the same children tags. Even the children tags did not have a structure that was similar to each other. Every child tag was different and the same children tags had different structures.
 
 ```{r setup}
  pacman::p_load(xml2, tidyverse, evaluate, collapse, htmltidy, janitor)
@@ -36,7 +36,7 @@ Let us look at another concept tag :
 htmltidy::xml_view(dconcept[9])
 ```
 
-In the above code snippet, you will notice that the children tags of concept\[9\] is different from concept\[1\]. So how do we convert this concept tag into one table when children tags are different? This would be hard to accomplish since we would aim to make each of these sub tags as unique columns in the concept table. Therefore, it is better to make each of these children tags as unique tables while retaining the cother common children tags of concept.
+In the above code snippet, you will notice that the children tags of concept\[9\] is different from concept\[1\]. So how do we convert this concept tag into one table when children tags are different? This would be hard to accomplish since we would aim to make each of these sub tags as unique columns in the concept table. Therefore, it is better to make each of these children tags as unique tables while retaining the other common children tags of concept.
 
 ```{r}
 

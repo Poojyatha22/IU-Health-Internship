@@ -1,13 +1,15 @@
 ---
-title: "IU Health Documentation part 2"
-author: "Harlan, Poojyatha"
+title: "IU Health Documentation part 2 (this is a presentation so swipe left or hit pageup/pagedown)"
+author: "Harlan A Nelson, Poojyatha Venkatesh"
 format: revealjs
 editor: visual
 ---
 
 ## MICROSOFT SQL SERVER
 
-Now that we have seen how a complex xml document can be converted into a csv files, the next step we do is that we try to upload these files to the Microsoft Azure Data Studio.
+Now that we have seen how a complex xml document can be converted into a csv files, the next step we do is that we try to upload these files to the Microsoft SQL Server.
+
+\[For next slide, swipe left if you're vieweing through a mobile phone, if you're using a PC, hit 'pageup/pagedown'\]
 
 ```{r echo=FALSE, out.width="50%"}
 
@@ -43,20 +45,20 @@ knitr::include_graphics("screenshots/2.png", error=FALSE)
 
 ```
 
-## We now pick the columns that we are particularly interested in which is 'CatalogCVCD and 'CatalogCVDisplayDSC' which are the drug code and drugs names.
+## We now pick the columns that we are particularly interested in which is 'CatalogCVCD 'and 'CatalogCVDisplayDSC' which are the drug code and drugs names.
 
 ```{r echo=FALSE, out.width="50%"}
 knitr::include_graphics("screenshots/3.png", error=FALSE)
 ```
 
-## Now, we access from_name from association table :
+## Accessing from_name from association table of xml :
 
 ```{r echo=FALSE, out.width="50%"}
 knitr::include_graphics("screenshots/4.png", error=FALSE)
 
 ```
 
-## Similarly, we access from_name from dts as well :
+## Accessing from_name from association table of dts as well :
 
 ```{r echo=FALSE, out.width="50%"}
 knitr::include_graphics("screenshots/5.png", error=FALSE)
@@ -64,21 +66,21 @@ knitr::include_graphics("screenshots/5.png", error=FALSE)
 
 ## Crosswalk
 
-For comparing two sets of strings, we convert them to a standard format - i.e. remove any extra characters that do not add value, convert all the string to either lower or upper strings, etc. Before we merge the data, we need to find out what are the strings that are exactly similar. For this, we calculate string_dist which tells us how similar two strings are. But this score alone may not be enough because two string can be in totally different lengths. Therefore, we need to find a way to normalise this. So we divide the string distance by the length of the string to calculate the simscore to check if two string are similar.
+For comparing two sets of strings, we convert them to a standard format - i.e. remove any extra characters that do not add value, convert all the string to either lower or upper strings, etc. Before we merge the data, we need to find out what are the strings that are exactly similar. For this, we calculate string_dist which tells us how similar two strings are. But this score alone may not be enough because two string can be in totally different lengths. Therefore, we need to find a way to normalise this. So we divide the string distance by the length of the string to calculate the simscore (similarity score) to check if two strings are similar.
 
-## Simscore
+## Simscore (Similarity Score)
 
 ```{r echo=FALSE, out.width="50%"}
 knitr::include_graphics("screenshots/simscore.png", error=FALSE)
 ```
 
-## After, this we go ahead and finally create the final crosswalk through row binding. We form a cross between xml, dts and the cerner data (table 1).
+## Creating the final crosswalk through row binding. We form a cross between xml, dts and the cerner data (table 1).
 
 ```{r echo=FALSE, out.width="50%"}
 knitr::include_graphics("screenshots/7.png", error=FALSE)
 ```
 
-## After creating this crosswalk, we upload this to the Microsoft SQL Server a well.
+## After creating this crosswalk, we upload this to the Microsoft SQL Server
 
 ```{r echo=FALSE, out.width="50%"}
 knitr::include_graphics("screenshots/8.png", error=FALSE)
