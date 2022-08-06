@@ -4,7 +4,7 @@ title: "Indiana University Health - Data Science Internship"
 
 Hi Everyone!
 
-I just though I'll share my work at Indiana University Health as a Data Science Intern! The goal of this internship was to download drug data from the RxNorm website ( https://www.nlm.nih.gov/research/umls/rxnorm/overview.html ), analyse this data and try to merge the data related to patients in the IU Health Server so that we can form cohorts of drugs / patients.
+I am sharing my work at Indiana University Health as a Data Science Intern here! The goal of this internship was to download drug data from the RxNorm website ( https://www.nlm.nih.gov/research/umls/rxnorm/overview.html ), analyse this data and try to merge the data related to patients in the IU Health Server so that we can form cohorts of drugs / patients.
 
 RxNorm is a normalised way of naming drugs. Drugs data could exist in different sources with slightly varied names. So RxNorm has a standard was recognizing these drugs with its nomenclature. It also releases drug related data every month with the updated drug list.
 
