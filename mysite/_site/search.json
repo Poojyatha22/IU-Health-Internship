@@ -2,9 +2,9 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "Indiana University Health - Data Science Internship",
+    "title": "Poojyatha Venkatesh",
     "section": "",
-    "text": "I just though I’ll share my work at Indiana University Health as a Data Science Intern! The goal of this internship was to download drug data from the RxNorm website ( https://www.nlm.nih.gov/research/umls/rxnorm/overview.html ), analyse this data and try to merge the data related to patients in the IU Health Server so that we can form cohorts of drugs / patients.\nRxNorm is a normalised way of naming drugs. Drugs data could exist in different sources with slightly varied names. So RxNorm has a standard was recognizing these drugs with its nomenclature. It also releases drug related data every month with the updated drug list.\nYou can see the summary of the work I have done with the help of my awesome supervisor Harlan A Nelson! I hope you gain something useful out of this and thanks for checking this out!"
+    "text": "This is Poojyatha Venkatesh! I am passionate about Data Science and playing around with data transformation and manipulation.\nI recently graduated from Indiana University Purdue University, Indianapolis with a Master’s\ndegree in Applied Data Science (August’22). I got my Bachelors in Information Technology from College of Engineering - Guindy, Anna University.\nFun fact : I am the Graduate Ambassador for the School of Informatics and Computingat IUPUI ( Poojyatha Venkatesh – School of Informatics and Computing : IUPUI ) So if you do have any plans of joining IUPUI or queries about the MS in Applied Data Science program / admissions / campus life, you could just connect with me on LinkedIn ( https://www.linkedin.com/in/poojyatha-venkatesh-18a081227/ )"
   },
   {
     "objectID": "Documentation.html",
@@ -149,8 +149,8 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Poojyatha Venkatesh",
+    "title": "Indiana University Health - Data Science Internship",
     "section": "",
-    "text": "This is Poojyatha Venkatesh! I am passionate about Data Science and playing around with data transformation and manipulation. I recently graduated from Indiana University Purdue University, Indianapolis with a Master’s degree in Applied Data Science (August’22). I got my Bachelors in Information Technology from College of Engineering - Guindy, Anna University.\nFun fact : I am the Graduate Ambassador for the School of Informatics and Computing, at IUPUI! So if you do have any plans of joining IUPUI or queries about the MS in Applied Data Science program / admissions / campus life, you could just connect with me on LinkedIn!"
+    "text": "I just though I’ll share my work at Indiana University Health as a Data Science Intern! The goal of this internship was to download drug data from the RxNorm website ( https://www.nlm.nih.gov/research/umls/rxnorm/overview.html ), analyse this data and try to merge the data related to patients in the IU Health Server so that we can form cohorts of drugs / patients.\nRxNorm is a normalised way of naming drugs. Drugs data could exist in different sources with slightly varied names. So RxNorm has a standard was recognizing these drugs with its nomenclature. It also releases drug related data every month with the updated drug list.\nYou can see the summary of the work I have done with the help of my awesome supervisor Harlan A Nelson! I hope you gain something useful out of this and thanks for checking this out!"
   }
 ]

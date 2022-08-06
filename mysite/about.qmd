@@ -1,11 +1,13 @@
 ---
-title: "Indiana University Health - Data Science Internship"
+title: "Poojyatha Venkatesh"
 ---
 
-Hi Everyone!
+Hey Everybody!
 
-I just though I'll share my work at Indiana University Health as a Data Science Intern! The goal of this internship was to download drug data from the RxNorm website ( [https://www.nlm.nih.gov/research/umls/rxnorm/overview.html](https://nam12.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm%2Foverview.html&data=05%7C01%7Cpvenkatesh%40iuhealth.org%7Ce1896e7456b04d4a4d2a08da73f4e432%7Cd9d470633f5e4de9bf99f083657fa0fe%7C0%7C0%7C637949792880867184%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=saxlJmUnKlcdMnIim33tSTAP2F0PJdNB9oKgI3VeIto%3D&reserved=0) ), analyse this data and try to merge the data related to patients in the IU Health Server so that we can form cohorts of drugs / patients.
+This is Poojyatha Venkatesh! I am passionate about Data Science and playing around with data transformation and manipulation.
 
-RxNorm is a normalised way of naming drugs. Drugs data could exist in different sources with slightly varied names. So RxNorm has a standard was recognizing these drugs with its nomenclature. It also releases drug related data every month with the updated drug list.
+I recently graduated from Indiana University Purdue University, Indianapolis with a Master's
 
-You can see the summary of the work I have done with the help of my awesome supervisor Harlan A Nelson! I hope you gain something useful out of this and thanks for checking this out!
+degree in Applied Data Science (August'22). I got my Bachelors in Information Technology from College of Engineering - Guindy, Anna University.
+
+Fun fact : I am the Graduate Ambassador for the School of Informatics and Computingat IUPUI ( [Poojyatha Venkatesh -- School of Informatics and Computing : IUPUI](https://soic.iupui.edu/people/poojyatha-venkatesh/) ) So if you do have any plans of joining IUPUI or queries about the MS in Applied Data Science program / admissions / campus life, you could just connect with me on LinkedIn ( https://www.linkedin.com/in/poojyatha-venkatesh-18a081227/ )
