@@ -39,7 +39,7 @@ knitr::include_graphics("screenshots/bisoprolpath.png", error=FALSE)
 
 ```
 
-## More about the my team - Clinical Research Department at IU Health :
+## More about the my team - Clinical Research Department at IU Health 
 
 Operation of Clinical Trials in Cerner (managing Protocol and Subject information, building Pre-screening to identify trial candidates, building Order sets for research protocols)
 
@@ -47,7 +47,7 @@ Feasibility evaluation, identification of patient cohorts for both retrospective
 
 Design and development of Cohort identification and analysis tool
 
-## The people:
+## The people
 
 I am grateful to have gotten inputs from Dr. Saravanan Kanakasabai, Mr. Gregory Klopper and Mr. Rick Tuason and of course my Supervisor Mr. Harlan A Nelson from the Clinical Research Department.
 
