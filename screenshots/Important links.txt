@@ -1,7 +1,0 @@
-https://www.r-bloggers.com/2020/11/converting-xml-data-to-r-dataframes-with-xmlconvert/
-
-
-https://study.com/academy/lesson/mutate-function-in-r-programming.html
-
-
-
