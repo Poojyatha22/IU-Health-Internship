@@ -4,6 +4,6 @@ title: "Poojyatha Venkatesh"
 
 Hey Everybody!
 
-This is Poojyatha Venkatesh! I am passionate about Data Science and playing around with data transformation and manipulation. I recently graduated from Indiana University Purdue University ( 8th of August 2022 ), Indianapolis with a Master's degree in Applied Data Science. I got my Bachelors in Information Technology from College of Engineering - Guindy, Anna University.
+This is Poojyatha Venkatesh! I am passionate about Data Science and playing around with data transformation and manipulation. I recently graduated from Indiana University Purdue University, Indianapolis with a Master's degree in Applied Data Science (August'22). I got my Bachelors in Information Technology from College of Engineering - Guindy, Anna University.
 
 Fun fact : I am the Graduate Ambassador for the School of Informatics and Computing, at IUPUI! So if you do have any plans of joining IUPUI or queries about the MS in Applied Data Science program / admissions / campus life, you could just connect with me on LinkedIn!

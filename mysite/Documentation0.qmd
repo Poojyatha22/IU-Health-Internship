@@ -1,0 +1,61 @@
+---
+title: "Summary of the IU Health DS Internship"
+author: "Harlan A Nelson, Poojyatha Venkatesh"
+format: revealjs
+editor: visual
+---
+
+## Purpose of this Internship 
+
+Note : this is a presentation, so please swipe left if you are viewieng through a phone or hit pageup/pagedown if you're using a PC
+
+One of the main objectives of this Internship was to form a great understanding of medicinal drugs, their hierarchy, their nomenclature etc so that we are easily understand their relationship with diseases and patients which will help us in forming patient cohorts or cohorts for drugs
+
+RxNorm is a nomenclature system for drugs. Every drug also has a hierarchy. Drugs can be grouped based on certain criteria. One such criteria is what we call 'Concept'.
+
+A Concept-type is like a way to group drugs. Under Concept types, we could have further divisions of criteria that help narrow down the hierarchy. A few examples of Concept types / CTY's are Mechanism of Action \[MoA\], Pharmokinetics \[PK\]. These can be used to describe drugs
+
+When we have an understanding of drugs through such concepts, we can compare to drugs together, understand why two drugs are similar or not similar to each other, what diseases they are used in the treatment of, if one drug can be used in the place of other to treat a disease etc.
+
+## An example of diseases that a drug treats
+
+In the below picture, we can see that a drug calles 'atenolol' is used in the treatment of various diseases that are in the different branches - 'Sick Synus Syndrome' , 'Bradycardia' , 'Myocardial Infarction' , 'Arrhythmia, Sinus' , 'Ventricular Fibrillation' and 'Shock, Cardiogenic'.
+
+```{r echo=FALSE, out.width="50%"}
+knitr::include_graphics("screenshots/atenolol.png", error=FALSE)
+```
+
+## Below, we are comparing two drugs : 'atenolol' and 'bisoprol' 
+
+We can see the hierarchy of the two drugs below. Both of these drugs come under a concept type called Anatomical Therapeutic Chemical \[ATC\], which further narrows down to the description of Cardiovascular system, Beta Blocking Agents and many more :
+
+```{r echo=FALSE, out.width="5%"}
+knitr::include_graphics("screenshots/atenololhierarchy.png", error=FALSE)
+```
+
+```{r echo=FALSE, out.width="10%"}
+knitr::include_graphics("screenshots/bisoprolpath.png", error=FALSE)
+
+```
+
+## More about the my team:
+
+Clinical Research Department at IU Health :
+
+Operation of Clinical Trials in Cerner (managing Protocol and Subject information, building Pre-screening to identify trial candidates, building Order sets for research protocols)
+
+Feasibility evaluation, identification of patient cohorts for both retrospective and prospective clinical research, data extraction and analysis as well as development of ML models for research
+
+Design and development of Cohort identification and analysis tool
+
+I am grateful to have gotten inputs from Dr. Saravanan Kanakasabai, Mr. Gregory Klopper and Mr. Rick Tuason and ofcourse my Supervisor Mr. Harlan A Nelson from the Clinical Research Department.
+
+How did this project make a difference to the Health care system at IU Health?
+
+Instead of associating drugs with diseases, we delve deeper and make searches more complex through including more facets into hierarchy like pharmacological class, concept types, etc. Correlation of drug regimens to diseases and health outcomes.
+
+## Future Work 
+
+Productionize so that it can be run every month -- RxNorm updates the drug data everymonth. A code that automates the job of downloading the latest drug data from RxNorm, parsing the xml files and stage them into Cerner Data Source Mart
+
+Use the ontologies to correlate treatments with health outcomes

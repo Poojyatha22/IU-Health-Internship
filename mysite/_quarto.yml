@@ -2,11 +2,10 @@ project:
   type: website
 
 website:
-  title: "Case Study parsing XML with R demonstrated with RxNorm"
+  title: "Case Study parsing XML with R"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
+
       - href: about.qmd
         text: about
       - href: Document0.qmd
@@ -14,9 +13,9 @@ website:
       - href: Documentation.qmd
         text: Parsing XML file
       - href: Documentation2.qmd
-        text: Working with drugs data and patient data
+        text: Merging data
       - href: Documentation3.qmd
-        text: List of all the xml-to-CSV files
+        text: All XML to CSV files
 format:
   html:
     theme: cosmo
